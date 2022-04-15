@@ -4,7 +4,7 @@ import aUSDIcon from "../assets/tokens/AUSD.png";
 import BNCIcon from "../assets/tokens/BNC.png";
 import KARIcon from "../assets/tokens/KAR.png";
 import KINTIcon from "../assets/tokens/KINT.png";
-// import PHAIcon from "../assets/tokens/PHA.png";
+import PHAIcon from "../assets/tokens/PHA.png";
 import TAIIcon from "../assets/tokens/TAI.png";
 
 export enum Chain {
@@ -92,6 +92,8 @@ export const tokens: Token[] = [
   {
     symbol: "PHA",
     address: "0x00000000000000000001000000000000000000Aa",
+    img: PHAIcon,
+    chains: [Chain.KARURA],
   },
   {
     symbol: "KINT",

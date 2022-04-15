@@ -44,6 +44,9 @@ module.exports = {
       animation: {
         tilt: "tilt 0.25s ease-out 1",
       },
+      transitionProperty: {
+        height: "height",
+      },
     },
   },
   plugins: [],

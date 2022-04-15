@@ -3,13 +3,6 @@
   import { tokens, Chain } from "./tokens";
   import TokenDropdown from "./TokenDropdown.svelte";
 
-  const chain: Chain = getContext("chain");
-  const activeTokens = tokens.filter((token) => {
-    if (token.chains && token.chains.includes(chain)) {
-      return true;
-    }
-  });
-
   // export let targetId: string;
   export let allowMax: boolean = false;
   export let defaultTokenSymbol = "KSM";
@@ -20,6 +13,13 @@
     : tokens[0];
   let showMax = false;
   let showDropdown = false;
+
+  const chain: Chain = getContext("chain");
+  const activeTokens = tokens.filter((token) => {
+    if (token.chains && token.chains.includes(chain)) {
+      return true;
+    }
+  });
 </script>
 
 <div
@@ -54,8 +54,7 @@
     {/if}
 
     <div
-      on:click={(e) => {
-        e.stopPropagation();
+      on:click={() => {
         showDropdown = !showDropdown;
       }}
     >
@@ -80,10 +79,7 @@
         selectedToken = token;
         showDropdown = false;
       }}
-      setShow={(show) => (showDropdown = show)}
-      on:click_outside={() => {
-        showDropdown = false;
-      }}
+      hideDropdown={() => (showDropdown = false)}
     />
   {/if}
 </div>
