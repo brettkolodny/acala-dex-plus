@@ -1,7 +1,8 @@
 <script lang="ts">
-  import type { Token } from "./tokens";
-  import { clickOutside } from "./directives/clickOutside";
   import { createEventDispatcher } from "svelte";
+  import { slide } from "svelte/transition";
+  import { clickOutside } from "./directives/clickOutside";
+  import type { Token } from "./tokens";
 
   export let tokens: Token[];
   export let selectedToken: Token;
@@ -14,6 +15,7 @@
 </script>
 
 <div
+  transition:slide
   class="absolute flex flex-col justify-center items-start gap-1 bg-base-300 p-1 rounded-xl shadow-xl z-10 transform translate-y-12 translate-x-10 pointer-events-auto"
   use:clickOutside
   on:outclick={hideDropdown}

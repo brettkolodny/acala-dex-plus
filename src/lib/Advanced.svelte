@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { slide } from "svelte/transition";
+
   let slippage = 0.5;
   let customValue: string | null = null;
 
@@ -14,6 +16,7 @@
 </script>
 
 <div
+  transition:slide
   class="flex flex-col justify-evenly items-center w-full gap-4 bg-base-600 shadow-inner rounded-xl p-2"
 >
   <div class="flex flex-row justify-between items-center w-full text-xl">
