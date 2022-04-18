@@ -1,12 +1,40 @@
 <script lang="ts">
+  import { Contract, Signer } from "ethers";
+  import erc20 from "../abis/ERC20.json";
+  import { accountInfo } from "./stores/accountInfo";
+  import type { Token } from "./tokens";
   import TokenSelect from "./TokenSelect.svelte";
+  import { getBalanceOf } from "./web3";
 
-  export let to: boolean = false;
+  export let from: boolean = false;
+
+  const id = from ? "to-input" : "from-input";
 
   let inputValue = "";
-  let max = to ? 100.4578 : null;
+  let selectedToken: Token;
+  let max = null;
 
-  const id = to ? "to-input" : "from-input";
+  $: {
+    if (from) {
+      selectedToken = $accountInfo.fromToken;
+    } else {
+      selectedToken = $accountInfo.toToken;
+    }
+  }
+
+  $: tokenContract = new Contract(
+    selectedToken.address,
+    erc20,
+    $accountInfo.provider
+  );
+
+  $: {
+    if (from && $accountInfo.signer) {
+      getBalanceOf(tokenContract, $accountInfo).then((balance: number) => {
+        max = balance;
+      });
+    }
+  }
 
   const inputChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -23,6 +51,27 @@
     const maxString = max.toString();
     inputValue = maxString;
     input.value = maxString;
+  };
+
+  const setSelectedToken = (token: Token) => {
+    if (from) {
+      if (token == $accountInfo.toToken) {
+        const from = $accountInfo.fromToken;
+        $accountInfo.fromToken = $accountInfo.toToken;
+        $accountInfo.toToken = from;
+      } else {
+        $accountInfo.fromToken = token;
+      }
+    } else {
+      if (token == $accountInfo.fromToken) {
+        const to = $accountInfo.toToken;
+        $accountInfo.toToken = $accountInfo.fromToken;
+        $accountInfo.fromToken = to;
+      } else {
+        $accountInfo.toToken = token;
+      }
+    }
+
   };
 </script>
 
@@ -51,9 +100,5 @@
     }`}
     on:input={inputChange}
   />
-  <TokenSelect
-    allowMax={to}
-    defaultTokenSymbol={to ? "aUSD" : "LKSM"}
-    {setMax}
-  />
+  <TokenSelect allowMax={from} {selectedToken} {setMax} {setSelectedToken} />
 </div>

@@ -3,7 +3,7 @@
   import { Chain } from "./lib/tokens";
   import Dex from "./lib/Dex.svelte";
 
-  setContext("chain", Chain.KARURA);
+  setContext("chain", Chain.MANDALA);
 </script>
 
 <main

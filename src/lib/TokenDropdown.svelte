@@ -9,8 +9,6 @@
   export let setSelected: (token: Token) => void;
   export let hideDropdown: () => void;
 
-  let show = false;
-
   const dispatch = createEventDispatcher();
 </script>
 

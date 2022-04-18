@@ -24,18 +24,18 @@ export const tokens: Token[] = [
   {
     symbol: "ACA",
     address: "0x0000000000000000000100000000000000000000",
-    chains: [Chain.ACALA],
+    chains: [Chain.ACALA, Chain.MANDALA],
   },
   {
     symbol: "aUSD",
     address: "0x0000000000000000000100000000000000000001",
     img: aUSDIcon,
-    chains: [Chain.ACALA],
+    chains: [Chain.ACALA, Chain.MANDALA],
   },
   {
     symbol: "DOT",
     address: "0x0000000000000000000100000000000000000002",
-    chains: [Chain.ACALA],
+    chains: [Chain.ACALA, Chain.MANDALA],
   },
   {
     symbol: "LDOT",
@@ -44,6 +44,7 @@ export const tokens: Token[] = [
   {
     symbol: "RENBTC",
     address: "0x0000000000000000000100000000000000000014",
+    chains: [Chain.MANDALA],
   },
   {
     symbol: "CASH",
@@ -65,19 +66,19 @@ export const tokens: Token[] = [
     symbol: "KSM",
     address: "0x0000000000000000000100000000000000000082",
     img: KSMIcon,
-    chains: [Chain.KARURA],
+    chains: [Chain.KARURA, Chain.MANDALA],
   },
   {
     symbol: "LKSM",
     address: "0x0000000000000000000100000000000000000083",
     img: LKSMIcon,
-    chains: [Chain.KARURA],
+    chains: [Chain.KARURA, Chain.MANDALA],
   },
   {
     symbol: "TAI",
     address: "0x0000000000000000000100000000000000000084",
     img: TAIIcon,
-    chains: [Chain.KARURA],
+    chains: [Chain.KARURA, Chain.MANDALA],
   },
   {
     symbol: "BNC",

@@ -1,16 +1,13 @@
 <script lang="ts">
   import { getContext } from "svelte";
-  import { tokens, Chain } from "./tokens";
+  import { tokens, Chain, Token } from "./tokens";
   import TokenDropdown from "./TokenDropdown.svelte";
 
-  // export let targetId: string;
   export let allowMax: boolean = false;
-  export let defaultTokenSymbol = "KSM";
   export let setMax: () => void;
+  export let selectedToken: Token;
+  export let setSelectedToken: (token: Token) => void;
 
-  let selectedToken = defaultTokenSymbol
-    ? tokens.find((token) => token.symbol === defaultTokenSymbol)
-    : tokens[0];
   let showMax = false;
   let showDropdown = false;
 
@@ -75,10 +72,7 @@
     <TokenDropdown
       tokens={activeTokens}
       {selectedToken}
-      setSelected={(token) => {
-        selectedToken = token;
-        showDropdown = false;
-      }}
+      setSelected={setSelectedToken}
       hideDropdown={() => (showDropdown = false)}
     />
   {/if}
