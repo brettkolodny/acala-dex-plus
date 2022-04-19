@@ -11,8 +11,9 @@ export class AccountInfo {
   public provider: providers.Web3Provider;
   public fromToken: Token;
   public toToken: Token;
-  public fromTokenAmount = 0;
-  public toTokenAmount = 0;
+  public fromTokenAmount = "";
+  public toTokenAmount = "";
+  public ratio = null;
   public slippage = 0.5;
   public dexContract: Contract;
   public fromTokenContract: Contract;

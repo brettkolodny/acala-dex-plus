@@ -2,10 +2,11 @@
   import { accountInfo } from "./stores/accountInfo";
   import type { Token } from "./tokens";
 
+  let ratio = null;
+
+  $: ratio = $accountInfo.ratio;
   $: fromTokenSymbol = $accountInfo.fromToken.symbol;
   $: toTokenSymbol = $accountInfo.toToken.symbol;
-  $: ratio = null;
-
   $: {
     fromTokenSymbol;
     toTokenSymbol;
@@ -26,7 +27,7 @@
       .toString()
       .split(".");
 
-    ratio = `${whole || 0}.${
+    $accountInfo.ratio = `${whole || 0}.${
       decimal.length > 4 ? decimal.slice(0, 4) : decimal
     }`;
   };

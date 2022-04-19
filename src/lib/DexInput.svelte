@@ -1,3 +1,8 @@
+<script context="module" lang="ts">
+  let fromInput = "";
+  let toInput = "";
+</script>
+
 <script lang="ts">
   import { accountInfo } from "./stores/accountInfo";
   import type { Token } from "./tokens";
@@ -6,12 +11,14 @@
 
   export let from: boolean = false;
 
-  export let inputValue = "";
-
-  const id = from ? "to-input" : "from-input";
+  const id = from ? "from-input" : "to-input";
 
   let selectedToken: Token;
   let max = null;
+
+  $: inputValue = from
+    ? $accountInfo.fromTokenAmount
+    : $accountInfo.toTokenAmount;
 
   $: {
     if (from) {
@@ -36,9 +43,29 @@
     const target = e.target as HTMLInputElement;
 
     if (!isNaN(Number(target.value))) {
-      inputValue = target.value;
+      if (from) {
+        $accountInfo.fromTokenAmount = target.value;
+
+        const newAmount =
+          Number($accountInfo.fromTokenAmount) * $accountInfo.ratio;
+        $accountInfo.toTokenAmount = newAmount ? newAmount.toString() : "";
+
+        let toInput = document.getElementById("to-input") as HTMLInputElement;
+        toInput.value = $accountInfo.toTokenAmount || "";
+      } else {
+        $accountInfo.toTokenAmount = target.value;
+
+        const newAmount =
+          Number($accountInfo.toTokenAmount) / $accountInfo.ratio;
+        $accountInfo.fromTokenAmount = newAmount ? newAmount.toString() : "";
+
+        let toInput = document.getElementById("from-input") as HTMLInputElement;
+        toInput.value = $accountInfo.fromTokenAmount;
+      }
     } else {
-      target.value = inputValue;
+      target.value = from
+        ? $accountInfo.fromTokenAmount
+        : $accountInfo.toTokenAmount;
     }
   };
 
@@ -89,7 +116,9 @@
     {#if inputValue}
       <span
         class={`${max && Number(inputValue) > max ? "text-primary-500" : ""}`}
-        >{inputValue}</span
+        >{from
+          ? $accountInfo.fromTokenAmount
+          : $accountInfo.toTokenAmount}</span
       >
     {:else}
       <span class="text-base-500">0.0</span>
