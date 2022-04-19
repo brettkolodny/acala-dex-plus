@@ -1,7 +1,8 @@
 <script lang="ts">
-  import * as ethers from "ethers";
+  import { providers, Signer } from "ethers";
   import { accountInfo } from "./stores/accountInfo";
   import DexInput from "./DexInput.svelte";
+  import TokenRatio from "./TokenRatio.svelte";
   import Advanced from "./Advanced.svelte";
   import cogIcon from "../assets/icons/cog.svg";
   import loadingIcon from "../assets/icons/loading.svg";
@@ -17,6 +18,7 @@
       console.log(e);
     }
   };
+
   const onSwapClicked = async () => {
     loading = true;
 
@@ -35,8 +37,9 @@
 >
   <DexInput from />
   <DexInput />
+
   <div class="flex flex-row justify-between items-center w-full">
-    <div class="text-base-300">1 aUSD = 0.0559 LKSM</div>
+    <TokenRatio />
     <div
       on:click={() => (showAdvanced = !showAdvanced)}
       class="p-1 rounded-full hover:bg-gray-500 cursor-pointer"
@@ -44,9 +47,11 @@
       <img src={cogIcon} alt="advanced" />
     </div>
   </div>
+
   {#if showAdvanced}
     <Advanced />
   {/if}
+
   <div
     class={`flex justify-center items-center w-full h-16 text-white text-2xl font-semibold rounded-xl bg-primary-900 hover:bg-primary-800 transition-all ${
       loading ? "cursor-not-allowed" : "cursor-pointer"

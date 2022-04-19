@@ -1,8 +1,11 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
+  import { accountInfo } from "./stores/accountInfo";
 
   let slippage = 0.5;
   let customValue: string | null = null;
+
+  $: $accountInfo.slippage = slippage;
 
   const onCustomInput = (e: Event) => {
     const value = Number((e.target as HTMLInputElement).value);

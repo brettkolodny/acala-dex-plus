@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { Contract, Signer } from "ethers";
-  import erc20 from "../abis/ERC20.json";
   import { accountInfo } from "./stores/accountInfo";
   import type { Token } from "./tokens";
   import TokenSelect from "./TokenSelect.svelte";
@@ -8,9 +6,10 @@
 
   export let from: boolean = false;
 
+  export let inputValue = "";
+
   const id = from ? "to-input" : "from-input";
 
-  let inputValue = "";
   let selectedToken: Token;
   let max = null;
 
@@ -22,15 +21,12 @@
     }
   }
 
-  $: tokenContract = new Contract(
-    selectedToken.address,
-    erc20,
-    $accountInfo.provider
-  );
-
   $: {
     if (from && $accountInfo.signer) {
-      getBalanceOf(tokenContract, $accountInfo).then((balance: number) => {
+      getBalanceOf(
+        from ? $accountInfo.fromTokenContract : $accountInfo.toTokenContract,
+        $accountInfo
+      ).then((balance: number) => {
         max = balance;
       });
     }
@@ -59,19 +55,28 @@
         const from = $accountInfo.fromToken;
         $accountInfo.fromToken = $accountInfo.toToken;
         $accountInfo.toToken = from;
+
+        const fromContract = $accountInfo.fromTokenContract;
+        $accountInfo.fromTokenContract = $accountInfo.toTokenContract;
+        $accountInfo.toTokenContract = fromContract;
       } else {
         $accountInfo.fromToken = token;
+        $accountInfo.updateContract(true);
       }
     } else {
       if (token == $accountInfo.fromToken) {
         const to = $accountInfo.toToken;
         $accountInfo.toToken = $accountInfo.fromToken;
         $accountInfo.fromToken = to;
+
+        const fromContract = $accountInfo.fromTokenContract;
+        $accountInfo.fromTokenContract = $accountInfo.toTokenContract;
+        $accountInfo.toTokenContract = fromContract;
       } else {
         $accountInfo.toToken = token;
+        $accountInfo.updateContract(false);
       }
     }
-
   };
 </script>
 
