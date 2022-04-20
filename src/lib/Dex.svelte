@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { providers, Signer } from "ethers";
   import { accountInfo } from "./stores/accountInfo";
   import DexInput from "./DexInput.svelte";
   import TokenRatio from "./TokenRatio.svelte";

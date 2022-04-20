@@ -3,10 +3,7 @@ import { providers, Signer, Contract, utils, BigNumber } from "ethers";
 import { Chain, Token, tokens } from "../tokens";
 import DexABI from "../../abis/DEX.json";
 import ERC20Abi from "../../abis/ERC20.json";
-import { parseUnits } from "ethers/lib/utils";
 import { FixedPointNumber } from "@acala-network/sdk-core";
-
-(window as any).utils = utils;
 
 const DEX_ADDRESS_MANDALA = "0x0000000000000000000000000000000000000804";
 

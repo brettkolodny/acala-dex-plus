@@ -10,7 +10,7 @@
 
 <div
   transition:fly|local
-  class="absolute top-8 right-8 flex flex-row justify-start items-center min-w-[320px] h-20 rounded-xl bg-base-200 overflow-hidden z-10"
+  class="absolute top-20 right-4 flex flex-row justify-start items-center min-w-[320px] h-20 rounded-xl bg-base-200 overflow-hidden z-10"
 >
   <div
     class={`w-3 h-full ${type === "error" ? "bg-red-400" : "bg-green-500"}`}
