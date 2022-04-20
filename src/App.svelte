@@ -5,7 +5,7 @@
   import Toast from "./lib/Toast.svelte";
 
   let showToast = false;
-  let toastTitle = "";
+  let toastTitle = "TX Success";
   let toastDetails: string | undefined = "";
   let toastType: "success" | "error" = "success";
 

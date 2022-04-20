@@ -20,25 +20,45 @@
     try {
       await $accountInfo.provider.send("eth_requestAccounts", []);
       $accountInfo.signer = $accountInfo.provider.getSigner();
-    } catch (e) {
-      console.log(e);
+    } catch (e: any) {
+      setShowToast("error", "Could not Connect", e.message);
+    } finally {
+      loading = false;
     }
   };
 
   const onSwapClicked = async () => {
     loading = true;
-
     if ($accountInfo.signer) {
-      const transaction = await $accountInfo.makeSwap();
-      transaction.wait().then((_value) => {
-        $accountInfo.fromTokenAmount = "";
-        $accountInfo.toTokenAmount = "";
-        setShowToast("success", "TX Success");
+      try {
+        const transaction = await $accountInfo.makeSwap();
+        transaction
+          .wait()
+          .then((_value) => {
+            $accountInfo.fromTokenAmount = "";
+            $accountInfo.toTokenAmount = "";
+            setShowToast("success", "TX Success");
+          })
+          .catch((reason: any) => {
+            setShowToast("error", "TX Failed", reason.message);
+          })
+          .finally(() => (loading = false));
+      } catch (e: any) {
+        let message: string | undefined;
+
+        if (
+          e.message ===
+          "MetaMask Tx Signature: User denied transaction signature."
+        ) {
+          message = "Transaction cancelled.";
+        } else {
+          message = e.message;
+        }
+        setShowToast("error", "TX Failed", message);
         loading = false;
-      });
+      }
     } else {
       await connectWallet();
-      loading = false;
     }
   };
 </script>
