@@ -29,10 +29,10 @@ export class AccountInfo {
   public toTokenContract: Contract;
 
   constructor(chain: Chain) {
-    if (chain === Chain.ACALA) {
-      this.fromToken = tokens.find((token) => token.symbol === "LDOT");
-    } else if (chain === Chain.MANDALA || chain === Chain.KARURA) {
-      this.fromToken = tokens.find((token) => token.symbol === "LKSM");
+    if (chain === Chain.ACALA || chain === Chain.MANDALA) {
+      this.fromToken = tokens.find((token) => token.symbol === "ACA");
+    } else if (chain === Chain.KARURA) {
+      this.fromToken = tokens.find((token) => token.symbol === "KAR");
     }
 
     this.toToken = tokens.find((token) => token.symbol === "aUSD");

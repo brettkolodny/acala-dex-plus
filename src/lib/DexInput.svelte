@@ -13,6 +13,30 @@
   let max = null;
   let inputElement: HTMLInputElement;
 
+  const setRatio = async (fromToken: Token, toToken: Token) => {
+    const decimals = await $accountInfo.fromTokenContract.decimals();
+    const oneToken = FixedPointNumber.ONE.mul(
+      new FixedPointNumber(10 ** decimals)
+    );
+
+    const amount = new FixedPointNumber(
+      (
+        await $accountInfo.dexContract.getSwapTargetAmount(
+          [fromToken.address, toToken.address],
+          oneToken.toString()
+        )
+      ).toString()
+    );
+
+    const targetTokenDecimals = await $accountInfo.toTokenContract.decimals();
+
+    $accountInfo.ratio = amount
+      .div(new FixedPointNumber(10 ** targetTokenDecimals))
+      .toString();
+  };
+
+  setRatio($accountInfo.fromToken, $accountInfo.toToken);
+
   $: inputValue = from
     ? $accountInfo.fromTokenAmount
     : $accountInfo.toTokenAmount;
@@ -92,7 +116,7 @@
     }
   };
 
-  const setSelectedToken = (token: Token) => {
+  const setSelectedToken = async (token: Token) => {
     if (from) {
       if (token == $accountInfo.toToken) {
         const from = $accountInfo.fromToken;
@@ -120,6 +144,9 @@
         $accountInfo.updateContract(false);
       }
     }
+
+    await setRatio($accountInfo.fromToken, $accountInfo.toToken);
+    setInputValues(inputElement);
   };
 </script>
 
@@ -127,27 +154,31 @@
   class="relative flex flex-row justify-between items-center w-full h-20 bg-base-100 dark:bg-base-600 rounded-xl shadow-inner-input"
 >
   <div
-    class="flex flex-row justify-start items-center w-full h-full pl-4 bg-transparent rounded-xl text-white text-3xl"
+    class="flex flex-row justify-start items-center w-full h-full pl-4 bg-transparent rounded-xl dark:text-white text-3xl overflow-hidden"
   >
-    {#if inputValue}
+    {#if inputValue && inputValue.length < 12}
       <span
         class={`${max && Number(inputValue) > max ? "text-primary-500" : ""}`}
         >{from
           ? $accountInfo.fromTokenAmount
           : $accountInfo.toTokenAmount}</span
       >
+    {:else if inputValue}
+      <div />
     {:else}
       <span class="text-base-500">0.0</span>
     {/if}
-    {#if max != null && Number(inputValue) != max}
-      <span class="text-base-500 overflow-hidden">&nbsp;/&nbsp;{max}</span>
+    {#if max != null && Number(inputValue) != max && inputValue.length < 12}
+      <span class="text-base-500">&nbsp;/&nbsp;{max}</span>
     {/if}
   </div>
   <input
     bind:this={inputElement}
     {id}
     class={`absolute w-full h-full pl-4 bg-transparent rounded-xl dark:text-white text-3xl ${
-      max && Number(inputValue) > max ? "text-red-400 dark:text-primary-200" : ""
+      max && Number(inputValue) > max
+        ? "text-red-400 dark:text-primary-200"
+        : ""
     }`}
     on:input={inputChange}
   />

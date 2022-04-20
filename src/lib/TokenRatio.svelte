@@ -26,29 +26,29 @@
     ratio = null;
   }
 
-  const getRatio = async (fromToken: Token, toToken: Token) => {
-    const decimals = await $accountInfo.fromTokenContract.decimals();
-    const oneToken = FixedPointNumber.ONE.mul(
-      new FixedPointNumber(10 ** decimals)
-    );
+  // const getRatio = async (fromToken: Token, toToken: Token) => {
+  //   const decimals = await $accountInfo.fromTokenContract.decimals();
+  //   const oneToken = FixedPointNumber.ONE.mul(
+  //     new FixedPointNumber(10 ** decimals)
+  //   );
 
-    const amount = new FixedPointNumber(
-      (
-        await $accountInfo.dexContract.getSwapTargetAmount(
-          [fromToken.address, toToken.address],
-          oneToken.toString()
-        )
-      ).toString()
-    );
+  //   const amount = new FixedPointNumber(
+  //     (
+  //       await $accountInfo.dexContract.getSwapTargetAmount(
+  //         [fromToken.address, toToken.address],
+  //         oneToken.toString()
+  //       )
+  //     ).toString()
+  //   );
 
-    const targetTokenDecimals = await $accountInfo.toTokenContract.decimals();
+  //   const targetTokenDecimals = await $accountInfo.toTokenContract.decimals();
 
-    $accountInfo.ratio = amount
-      .div(new FixedPointNumber(10 ** targetTokenDecimals))
-      .toString();
-  };
+  //   $accountInfo.ratio = amount
+  //     .div(new FixedPointNumber(10 ** targetTokenDecimals))
+  //     .toString();
+  // };
 
-  $: getRatio($accountInfo.fromToken, $accountInfo.toToken);
+  // $: getRatio($accountInfo.fromToken, $accountInfo.toToken);
 </script>
 
 <div>

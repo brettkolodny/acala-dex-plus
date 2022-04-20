@@ -68,7 +68,7 @@
   <DexInput from />
   <DexInput />
 
-  <div class="flex flex-row justify-between items-center w-full">
+  <div class="flex flex-row justify-between items-center w-full h-6">
     <TokenRatio />
     <div
       on:click={() => (showAdvanced = !showAdvanced)}
