@@ -1,6 +1,6 @@
 import KSMIcon from "../assets/tokens/KSM.png";
 import LKSMIcon from "../assets/tokens/LKSM.png";
-import aUSDIcon from "../assets/tokens/AUSD.png";
+import aUSDIcon from "../assets/tokens/aUSD.png";
 import BNCIcon from "../assets/tokens/BNC.png";
 import KARIcon from "../assets/tokens/KAR.png";
 import KINTIcon from "../assets/tokens/KINT.png";
