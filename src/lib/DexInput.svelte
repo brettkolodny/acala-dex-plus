@@ -127,7 +127,7 @@
       <span class="text-base-500">0.0</span>
     {/if}
     {#if max != null && Number(inputValue) != max}
-      <span class="text-base-500">&nbsp;/&nbsp;{max}</span>
+      <span class="text-base-500 overflow-hidden">&nbsp;/&nbsp;{max}</span>
     {/if}
   </div>
   <input
