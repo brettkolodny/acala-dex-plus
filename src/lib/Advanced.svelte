@@ -4,25 +4,13 @@
 
   let slippage = 0.5;
   let customValue: string | null = null;
-  // let gasEstimate = 0;
+  // let priceImpact = 0;
+
+  // const getPriceImpact = async () => {
+  //   const poolInfo = await $accountInfo.dexContract.
+  // }
 
   $: $accountInfo.slippage = slippage;
-  // $: {
-  //   const estimateGas = async () => {
-  //     const [path, totalSupply, minTarget] = await $accountInfo.getParams();
-
-  //     const estimate =
-  //       await $accountInfo.dexContract.estimateGas.swapWithExactSupply(
-  //         path,
-  //         totalSupply,
-  //         minTarget
-  //       );
-
-  //     console.log(estimate);
-  //   };
-
-  //   estimateGas();
-  // }
 
   const onCustomInput = (e: Event) => {
     const value = Number((e.target as HTMLInputElement).value);
@@ -78,7 +66,7 @@
       placeholder="custom"
     />
   </div>
-  <div class="w-full h-[2px] bg-base-500 shadow-inner" />
+  <!-- <div class="w-full h-[2px] bg-base-500 shadow-inner" />
   <div
     class="flex flex-row justify-between items-center w-full text-xl text-base-200 "
   >
@@ -95,8 +83,8 @@
     class="flex flex-row justify-between items-center w-full text-xl text-base-200 "
   >
     <div>Price Impact</div>
-    <div class="text-white font-normal">0.4%</div>
-  </div>
+    <div class="text-white font-normal">{priceImpact}%</div>
+  </div> -->
 </div>
 
 <style>

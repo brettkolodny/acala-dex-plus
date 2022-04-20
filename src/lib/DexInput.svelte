@@ -11,10 +11,21 @@
 
   let selectedToken: Token;
   let max = null;
+  let inputElement: HTMLInputElement;
 
   $: inputValue = from
     ? $accountInfo.fromTokenAmount
     : $accountInfo.toTokenAmount;
+
+  $: {
+    if (inputElement) {
+      if (from) {
+        inputElement.value = $accountInfo.fromTokenAmount;
+      } else {
+        inputElement.value = $accountInfo.toTokenAmount;
+      }
+    }
+  }
 
   $: {
     if (from) {
@@ -133,6 +144,7 @@
     {/if}
   </div>
   <input
+    bind:this={inputElement}
     {id}
     class={`absolute w-full h-full pl-4 bg-transparent rounded-xl text-white text-3xl ${
       max && Number(inputValue) > max ? "text-primary-200" : ""

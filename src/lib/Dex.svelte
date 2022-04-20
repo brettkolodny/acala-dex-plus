@@ -7,6 +7,12 @@
   import cogIcon from "../assets/icons/cog.svg";
   import loadingIcon from "../assets/icons/loading.svg";
 
+  export let setShowToast: (
+    type: "error" | "success",
+    title: string,
+    details?: string
+  ) => void;
+
   let showAdvanced = false;
   let loading = false;
 
@@ -24,7 +30,10 @@
 
     if ($accountInfo.signer) {
       const transaction = await $accountInfo.makeSwap();
-      transaction.wait().then((value) => {
+      transaction.wait().then((_value) => {
+        $accountInfo.fromTokenAmount = "";
+        $accountInfo.toTokenAmount = "";
+        setShowToast("success", "TX Success");
         loading = false;
       });
     } else {

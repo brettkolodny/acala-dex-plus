@@ -51,7 +51,6 @@ export const tokens: Token[] = [
   {
     symbol: "RENBTC",
     address: "0x0000000000000000000100000000000000000014",
-    chains: [Chain.MANDALA],
   },
   {
     symbol: "CASH",
@@ -85,7 +84,7 @@ export const tokens: Token[] = [
     symbol: "TAI",
     address: "0x0000000000000000000100000000000000000084",
     img: TAIIcon,
-    chains: [Chain.KARURA, Chain.MANDALA],
+    chains: [Chain.KARURA],
   },
   {
     symbol: "BNC",
