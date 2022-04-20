@@ -3,7 +3,7 @@
   import { Chain } from "./lib/tokens";
   import Dex from "./lib/Dex.svelte";
   import Toast from "./lib/Toast.svelte";
-import Account from "./lib/Account.svelte";
+  import Account from "./lib/Account.svelte";
 
   let showToast = false;
   let toastTitle = "TX Success";
@@ -27,7 +27,7 @@ import Account from "./lib/Account.svelte";
 </script>
 
 <main
-  class="flex flex-col justify-start items-center h-screen w-screen bg-gradient-to-br from-primary-700 to-base-900 pt-80"
+  class="flex flex-col justify-start items-center h-screen w-screen bg-gradient-to-br from-acala-700 to-white dark:from-primary-700 dark:to-base-900 pt-80"
 >
   <Account />
   {#if showToast}

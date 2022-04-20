@@ -23,7 +23,7 @@
   class="absolute flex flex-row justify-end w-full cursor-text pointer-events-none"
 >
   <div
-    class={`flex flex-row justify-end items-center gap-2 bg-base-800 mr-4 pointer-events-auto ${
+    class={`flex flex-row justify-end items-center gap-2 bg-base-300 dark:bg-base-800 mr-4 pointer-events-auto ${
       showMax ? "rounded-l-xl rounded-r-[22px]" : "rounded-full"
     } cursor-defaults`}
     on:mouseenter={() => {
@@ -44,7 +44,7 @@
           setMax();
           showMax = false;
         }}
-        class="flex justify-center items-center w-24 h-[34px] bg-primary-400 text-white font-semibold rounded-lg ml-1 cursor-pointer shadow-lg transition-all"
+        class="flex justify-center items-center w-24 h-[34px] bg-acala-600 dark:bg-primary-400 text-white font-semibold rounded-lg ml-1 cursor-pointer shadow-lg transition-all"
       >
         Max
       </div>
