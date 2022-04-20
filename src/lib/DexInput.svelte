@@ -73,10 +73,12 @@
   };
 
   const setMax = () => {
-    const input = document.getElementById(id) as HTMLInputElement;
-    const maxString = max.toString();
-    input.value = maxString;
-    setInputValues(input);
+    if (max) {
+      const input = document.getElementById(id) as HTMLInputElement;
+      const maxString = max.toString();
+      input.value = maxString;
+      setInputValues(input);
+    }
   };
 
   const setSelectedToken = (token: Token) => {
