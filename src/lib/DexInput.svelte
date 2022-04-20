@@ -39,12 +39,10 @@
     }
   }
 
-  const inputChange = (e: Event) => {
-    const target = e.target as HTMLInputElement;
-
-    if (!isNaN(Number(target.value))) {
+  const setInputValues = (inputElement: HTMLInputElement) => {
+    if (!isNaN(Number(inputElement.value))) {
       if (from) {
-        $accountInfo.fromTokenAmount = target.value;
+        $accountInfo.fromTokenAmount = inputElement.value;
 
         const newAmount =
           Number($accountInfo.fromTokenAmount) * $accountInfo.ratio;
@@ -53,7 +51,7 @@
         let toInput = document.getElementById("to-input") as HTMLInputElement;
         toInput.value = $accountInfo.toTokenAmount || "";
       } else {
-        $accountInfo.toTokenAmount = target.value;
+        $accountInfo.toTokenAmount = inputElement.value;
 
         const newAmount =
           Number($accountInfo.toTokenAmount) / $accountInfo.ratio;
@@ -63,17 +61,22 @@
         toInput.value = $accountInfo.fromTokenAmount;
       }
     } else {
-      target.value = from
+      inputElement.value = from
         ? $accountInfo.fromTokenAmount
         : $accountInfo.toTokenAmount;
     }
   };
 
+  const inputChange = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    setInputValues(target);
+  };
+
   const setMax = () => {
     const input = document.getElementById(id) as HTMLInputElement;
     const maxString = max.toString();
-    inputValue = maxString;
     input.value = maxString;
+    setInputValues(input);
   };
 
   const setSelectedToken = (token: Token) => {
