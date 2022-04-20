@@ -1,9 +1,5 @@
-<script context="module" lang="ts">
-  let fromInput = "";
-  let toInput = "";
-</script>
-
 <script lang="ts">
+  import { FixedPointNumber } from "@acala-network/sdk-core";
   import { accountInfo } from "./stores/accountInfo";
   import type { Token } from "./tokens";
   import TokenSelect from "./TokenSelect.svelte";
@@ -44,18 +40,22 @@
       if (from) {
         $accountInfo.fromTokenAmount = inputElement.value;
 
-        const newAmount =
-          Number($accountInfo.fromTokenAmount) * $accountInfo.ratio;
-        $accountInfo.toTokenAmount = newAmount ? newAmount.toString() : "";
+        const newAmount = new FixedPointNumber(
+          $accountInfo.fromTokenAmount
+        ).mul(new FixedPointNumber($accountInfo.ratio));
+        $accountInfo.toTokenAmount =
+          !newAmount.isNaN() && !newAmount.isZero() ? newAmount.toString() : "";
 
         let toInput = document.getElementById("to-input") as HTMLInputElement;
         toInput.value = $accountInfo.toTokenAmount || "";
       } else {
         $accountInfo.toTokenAmount = inputElement.value;
 
-        const newAmount =
-          Number($accountInfo.toTokenAmount) / $accountInfo.ratio;
-        $accountInfo.fromTokenAmount = newAmount ? newAmount.toString() : "";
+        const newAmount = new FixedPointNumber($accountInfo.toTokenAmount).div(
+          new FixedPointNumber($accountInfo.ratio)
+        );
+        $accountInfo.fromTokenAmount =
+          !newAmount.isNaN() && !newAmount.isZero() ? newAmount.toString() : "";
 
         let toInput = document.getElementById("from-input") as HTMLInputElement;
         toInput.value = $accountInfo.fromTokenAmount;

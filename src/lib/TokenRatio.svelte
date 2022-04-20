@@ -1,10 +1,22 @@
 <script lang="ts">
+  import { FixedPointNumber } from "@acala-network/sdk-core";
   import { accountInfo } from "./stores/accountInfo";
   import type { Token } from "./tokens";
 
   let ratio = null;
 
-  $: ratio = $accountInfo.ratio;
+  const getRatioDisplay = (r: string | null) => {
+    if (r) {
+      const [whole, decimal] = r.split(".");
+      return `${whole || 0}.${
+        decimal.length > 4 ? decimal.slice(0, 4) : decimal
+      }`;
+    }
+
+    return null;
+  };
+
+  $: ratio = getRatioDisplay($accountInfo.ratio);
   $: fromTokenSymbol = $accountInfo.fromToken.symbol;
   $: toTokenSymbol = $accountInfo.toToken.symbol;
   $: {
@@ -16,22 +28,24 @@
 
   const getRatio = async (fromToken: Token, toToken: Token) => {
     const decimals = await $accountInfo.fromTokenContract.decimals();
-    const oneToken = 1 * 10 ** decimals;
+    const oneToken = FixedPointNumber.ONE.mul(
+      new FixedPointNumber(10 ** decimals)
+    );
 
-    const amount = await $accountInfo.dexContract.getSwapTargetAmount(
-      [fromToken.address, toToken.address],
-      oneToken
+    const amount = new FixedPointNumber(
+      (
+        await $accountInfo.dexContract.getSwapTargetAmount(
+          [fromToken.address, toToken.address],
+          oneToken.toString()
+        )
+      ).toString()
     );
 
     const targetTokenDecimals = await $accountInfo.toTokenContract.decimals();
 
-    const [whole, decimal] = (amount.toNumber() / 10 ** targetTokenDecimals)
-      .toString()
-      .split(".");
-
-    $accountInfo.ratio = `${whole || 0}.${
-      decimal.length > 4 ? decimal.slice(0, 4) : decimal
-    }`;
+    $accountInfo.ratio = amount
+      .div(new FixedPointNumber(10 ** targetTokenDecimals))
+      .toString();
   };
 
   $: getRatio($accountInfo.fromToken, $accountInfo.toToken);

@@ -1,9 +1,10 @@
 import { writable } from "svelte/store";
-import { providers, Signer, Contract, utils } from "ethers";
+import { providers, Signer, Contract, utils, BigNumber } from "ethers";
 import { Chain, Token, tokens } from "../tokens";
 import DexABI from "../../abis/DEX.json";
 import ERC20Abi from "../../abis/ERC20.json";
 import { parseUnits } from "ethers/lib/utils";
+import { FixedPointNumber } from "@acala-network/sdk-core";
 
 (window as any).utils = utils;
 
@@ -74,23 +75,26 @@ export class AccountInfo {
     const path = [this.fromToken.address, this.toToken.address];
 
     const supplyAmountDecimals = await this.fromTokenContract.decimals();
-    const totalSupply = utils
-      .parseUnits(
-        trimDecimals(this.fromTokenAmount, supplyAmountDecimals),
-        supplyAmountDecimals
-      )
-      .toNumber();
+    const totalSupply = utils.parseUnits(
+      trimDecimals(this.fromTokenAmount, supplyAmountDecimals),
+      supplyAmountDecimals
+    );
 
     const targetAmountDecimals = await this.toTokenContract.decimals();
 
-    const minTarget =
-      utils
-        .parseUnits(
-          trimDecimals(this.toTokenAmount, targetAmountDecimals),
-          targetAmountDecimals
-        )
-        .toNumber() *
-      ((100 - this.slippage) / 100);
+    const minTarget = BigNumber.from(
+      new FixedPointNumber(
+        utils
+          .parseUnits(
+            trimDecimals(this.toTokenAmount, targetAmountDecimals),
+            targetAmountDecimals
+          )
+          .toString()
+      )
+        .mul(new FixedPointNumber((100 - this.slippage) / 100))
+        .trunc()
+        .toString()
+    );
 
     return [path, totalSupply, minTarget];
   }
