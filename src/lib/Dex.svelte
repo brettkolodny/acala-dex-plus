@@ -23,12 +23,14 @@
     loading = true;
 
     if ($accountInfo.signer) {
-      console.log(await $accountInfo.signer.getAddress());
+      const transaction = await $accountInfo.makeSwap();
+      transaction.wait().then((value) => {
+        loading = false;
+      });
     } else {
       await connectWallet();
+      loading = false;
     }
-
-    loading = false;
   };
 </script>
 

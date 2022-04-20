@@ -4,8 +4,25 @@
 
   let slippage = 0.5;
   let customValue: string | null = null;
+  // let gasEstimate = 0;
 
   $: $accountInfo.slippage = slippage;
+  // $: {
+  //   const estimateGas = async () => {
+  //     const [path, totalSupply, minTarget] = await $accountInfo.getParams();
+
+  //     const estimate =
+  //       await $accountInfo.dexContract.estimateGas.swapWithExactSupply(
+  //         path,
+  //         totalSupply,
+  //         minTarget
+  //       );
+
+  //     console.log(estimate);
+  //   };
+
+  //   estimateGas();
+  // }
 
   const onCustomInput = (e: Event) => {
     const value = Number((e.target as HTMLInputElement).value);

@@ -1,10 +1,21 @@
 import { writable } from "svelte/store";
-import { providers, Signer, Contract, BigNumber } from "ethers";
+import { providers, Signer, Contract, utils } from "ethers";
 import { Chain, Token, tokens } from "../tokens";
 import DexABI from "../../abis/DEX.json";
 import ERC20Abi from "../../abis/ERC20.json";
+import { parseUnits } from "ethers/lib/utils";
+
+(window as any).utils = utils;
 
 const DEX_ADDRESS_MANDALA = "0x0000000000000000000000000000000000000804";
+
+function trimDecimals(stringNumber: string, decimalsPlaces: number): string {
+  const [whole, decimals] = stringNumber.split(".");
+
+  return `${whole ? whole : "0"}.${
+    decimals ? decimals.slice(0, decimalsPlaces) : "0"
+  }`;
+}
 
 export class AccountInfo {
   public signer: null | Signer = null;
@@ -41,19 +52,6 @@ export class AccountInfo {
       ERC20Abi,
       this.provider
     );
-    // console.log(
-    //   this.dex
-    //     .getSwapTargetAmount(
-    //       [
-    //         "0x0000000000000000000100000000000000000000",
-    //         "0x0000000000000000000100000000000000000001",
-    //       ],
-    //       1000000000000
-    //     )
-    //     .then((value: BigNumber) => {
-    //       console.log(value.toNumber() / 10 ** 12);
-    //     })
-    // );
   }
 
   public updateContract(from: boolean) {
@@ -72,8 +70,44 @@ export class AccountInfo {
     }
   }
 
-  public makeSwap() {
+  public async getParams() {
+    const path = [this.fromToken.address, this.toToken.address];
+
+    const supplyAmountDecimals = await this.fromTokenContract.decimals();
+    const totalSupply = utils
+      .parseUnits(
+        trimDecimals(this.fromTokenAmount, supplyAmountDecimals),
+        supplyAmountDecimals
+      )
+      .toNumber();
+
+    const targetAmountDecimals = await this.toTokenContract.decimals();
+
+    const minTarget =
+      utils
+        .parseUnits(
+          trimDecimals(this.toTokenAmount, targetAmountDecimals),
+          targetAmountDecimals
+        )
+        .toNumber() *
+      ((100 - this.slippage) / 100);
+
+    return [path, totalSupply, minTarget];
+  }
+
+  public async makeSwap(): Promise<providers.TransactionResponse> {
     if (this.signer) {
+      const [path, totalSupply, minTarget] = await this.getParams();
+
+      const dexWithSigner = this.dexContract.connect(this.signer);
+
+      const tx = await dexWithSigner.swapWithExactSupply(
+        path,
+        totalSupply,
+        minTarget
+      );
+
+      return tx;
     }
   }
 }

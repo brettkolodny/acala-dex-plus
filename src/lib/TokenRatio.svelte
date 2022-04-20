@@ -23,7 +23,9 @@
       oneToken
     );
 
-    const [whole, decimal] = (amount.toNumber() / 10 ** 12)
+    const targetTokenDecimals = await $accountInfo.toTokenContract.decimals();
+
+    const [whole, decimal] = (amount.toNumber() / 10 ** targetTokenDecimals)
       .toString()
       .split(".");
 
