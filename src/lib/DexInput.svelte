@@ -124,7 +124,7 @@
 </script>
 
 <div
-  class="relative flex flex-row justify-between items-center w-full h-20 bg-base-600 rounded-xl shadow-inner-input"
+  class="relative flex flex-row justify-between items-center w-full h-20 bg-base-100 dark:bg-base-600 rounded-xl shadow-inner-input"
 >
   <div
     class="flex flex-row justify-start items-center w-full h-full pl-4 bg-transparent rounded-xl text-white text-3xl"
@@ -146,8 +146,8 @@
   <input
     bind:this={inputElement}
     {id}
-    class={`absolute w-full h-full pl-4 bg-transparent rounded-xl text-white text-3xl ${
-      max && Number(inputValue) > max ? "text-primary-200" : ""
+    class={`absolute w-full h-full pl-4 bg-transparent rounded-xl dark:text-white text-3xl ${
+      max && Number(inputValue) > max ? "text-red-400 dark:text-primary-200" : ""
     }`}
     on:input={inputChange}
   />

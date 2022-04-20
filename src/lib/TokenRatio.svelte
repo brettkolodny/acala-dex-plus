@@ -53,7 +53,7 @@
 
 <div>
   {#if ratio}
-    <div class="text-base-300">
+    <div class="text-base-800 dark:text-base-300">
       1 {fromTokenSymbol} = {ratio}
       {toTokenSymbol}
     </div>

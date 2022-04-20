@@ -63,7 +63,7 @@
 </script>
 
 <div
-  class={`flex flex-col justify-center items-center gap-2 w-[448px] p-2 bg-base-800 rounded-xl shadow-xl transition-height`}
+  class={`flex flex-col justify-center items-center gap-2 w-[448px] p-2 bg-white dark:bg-base-800 rounded-xl shadow-xl transition-height`}
 >
   <DexInput from />
   <DexInput />
@@ -72,8 +72,8 @@
     <TokenRatio />
     <div
       on:click={() => (showAdvanced = !showAdvanced)}
-      class="p-1 rounded-full hover:bg-gray-500 cursor-pointer"
-    >
+      class="flex justify-center items-center p-1 rounded-full hover:border dark:hover:border-none dark:hover:bg-gray-500 cursor-pointer h-4"
+      >
       <img src={cogIcon} alt="advanced" />
     </div>
   </div>
@@ -83,7 +83,7 @@
   {/if}
 
   <div
-    class={`flex justify-center items-center w-full h-16 text-white text-2xl font-semibold rounded-xl bg-primary-900 hover:bg-primary-800 transition-all ${
+    class={`flex justify-center items-center w-full h-16 text-white text-2xl font-semibold rounded-xl bg-acala-600 hover:bg-acala-800 dark:bg-primary-900 dark:hover:bg-primary-800 transition-all ${
       loading ? "cursor-not-allowed" : "cursor-pointer"
     }`}
     on:click={onSwapClicked}

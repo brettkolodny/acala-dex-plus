@@ -14,14 +14,16 @@
 
 <div
   transition:slide
-  class="absolute flex flex-col justify-center items-start gap-1 bg-base-300 p-1 rounded-xl shadow-xl z-10 transform translate-y-12 translate-x-10 pointer-events-auto"
+  class="absolute flex flex-col justify-center items-start gap-1 bg-base-200 dark:bg-base-300 p-1 rounded-xl shadow-xl z-10 transform translate-y-12 translate-x-10 pointer-events-auto"
   use:clickOutside
   on:outclick={hideDropdown}
 >
   {#each tokens as token}
     <div
       class={`flex flex-row justify-start items-center gap-2 w-full cursor-pointer rounded-lg p-1 ${
-        token.symbol === selectedToken.symbol ? "bg-base-600 shadow-inner" : ""
+        token.symbol === selectedToken.symbol
+          ? "bg-base-50 dark:bg-base-600 shadow-inner"
+          : ""
       }`}
       on:click={() => {
         setSelected(token);
@@ -37,7 +39,7 @@
       </div>
       <div
         class={`text-lg ${
-          token.symbol === selectedToken.symbol ? "text-white" : ""
+          token.symbol === selectedToken.symbol ? "dark:text-white" : ""
         }`}
       >
         {token.symbol}
