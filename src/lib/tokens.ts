@@ -7,7 +7,7 @@ import KINTIcon from "../assets/tokens/KINT.png";
 import PHAIcon from "../assets/tokens/PHA.png";
 import TAIIcon from "../assets/tokens/TAI.png";
 import ACAIcon from "../assets/tokens/ACA.png";
-import DOTIcon from "../assets/tokens/DOT.png";
+import DOTIcon from "../assets/tokens/DOT.svg";
 import LDOTIcon from "../assets/tokens/LDOT.png";
 
 export enum Chain {
