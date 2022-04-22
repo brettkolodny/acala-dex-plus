@@ -73,7 +73,7 @@
     <div
       on:click={() => (showAdvanced = !showAdvanced)}
       class="flex justify-center items-center p-1 rounded-full hover:border dark:hover:border-none dark:hover:bg-gray-500 cursor-pointer h-4"
-      >
+    >
       <img src={cogIcon} alt="advanced" />
     </div>
   </div>

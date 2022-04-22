@@ -20,6 +20,7 @@ export class AccountInfo {
   public provider: providers.Web3Provider;
   public fromToken: Token;
   public toToken: Token;
+  public stableToken: Token;
   public fromTokenAmount = "";
   public toTokenAmount = "";
   public ratio = null;
@@ -31,11 +32,20 @@ export class AccountInfo {
   constructor(chain: Chain) {
     if (chain === Chain.ACALA || chain === Chain.MANDALA) {
       this.fromToken = tokens.find((token) => token.symbol === "ACA");
+      const stableToken = tokens.find(
+        (token) => token.symbol === "aUSD" && token.chains.includes(Chain.ACALA)
+      );
+      this.toToken = stableToken;
+      this.stableToken = stableToken;
     } else if (chain === Chain.KARURA) {
       this.fromToken = tokens.find((token) => token.symbol === "KAR");
+      const stableToken = tokens.find(
+        (token) =>
+          token.symbol === "aUSD" && token.chains.includes(Chain.KARURA)
+      );
+      this.toToken = stableToken;
+      this.stableToken = stableToken;
     }
-
-    this.toToken = tokens.find((token) => token.symbol === "aUSD");
 
     this.provider = new providers.Web3Provider((window as any).ethereum);
 
@@ -69,7 +79,7 @@ export class AccountInfo {
   }
 
   public async getParams() {
-    const path = [this.fromToken.address, this.toToken.address];
+    let path = [this.fromToken.address, this.toToken.address];
 
     const supplyAmountDecimals = await this.fromTokenContract.decimals();
     const totalSupply = utils.parseUnits(
@@ -79,36 +89,37 @@ export class AccountInfo {
 
     const targetAmountDecimals = await this.toTokenContract.decimals();
 
-    const minTarget = BigNumber.from(
-      new FixedPointNumber(
-        utils
-          .parseUnits(
-            trimDecimals(this.toTokenAmount, targetAmountDecimals),
-            targetAmountDecimals
-          )
-          .toString()
-      )
-        .mul(new FixedPointNumber((100 - this.slippage) / 100))
-        .trunc()
-        .toString()
-    );
+    let target: BigNumber;
+
+    try {
+      target = await this.dexContract.getSwapTargetAmount(path, totalSupply);
+    } catch {
+      path = [path[0], this.stableToken.address, path[1]];
+      target = await this.dexContract.getSwapTargetAmount(path, totalSupply);
+    }
+
+    const minTarget = new FixedPointNumber(
+      target.toString(),
+      targetAmountDecimals
+    )
+      .mul(new FixedPointNumber((100 - this.slippage) / 100))
+      .toString()
+      .split(".")[0];
 
     return [path, totalSupply, minTarget];
   }
 
   public async makeSwap(): Promise<providers.TransactionResponse> {
     if (this.signer) {
-      const [path, totalSupply, minTarget] = await this.getParams();
+      let [path, totalSupply, minTarget] = await this.getParams();
 
       const dexWithSigner = this.dexContract.connect(this.signer);
 
-      const tx = await dexWithSigner.swapWithExactSupply(
+      return await dexWithSigner.swapWithExactSupply(
         path,
         totalSupply,
         minTarget
       );
-
-      return tx;
     }
   }
 }

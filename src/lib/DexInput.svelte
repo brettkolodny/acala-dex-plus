@@ -19,14 +19,30 @@
       new FixedPointNumber(10 ** decimals)
     );
 
-    const amount = new FixedPointNumber(
-      (
-        await $accountInfo.dexContract.getSwapTargetAmount(
-          [fromToken.address, toToken.address],
-          oneToken.toString()
-        )
-      ).toString()
-    );
+    let amount: FixedPointNumber;
+    try {
+      amount = new FixedPointNumber(
+        (
+          await $accountInfo.dexContract.getSwapTargetAmount(
+            [fromToken.address, toToken.address],
+            oneToken.toString()
+          )
+        ).toString()
+      );
+    } catch {
+      amount = new FixedPointNumber(
+        (
+          await $accountInfo.dexContract.getSwapTargetAmount(
+            [
+              fromToken.address,
+              $accountInfo.stableToken.address,
+              toToken.address,
+            ],
+            oneToken.toString()
+          )
+        ).toString()
+      );
+    }
 
     const targetTokenDecimals = await $accountInfo.toTokenContract.decimals();
 
