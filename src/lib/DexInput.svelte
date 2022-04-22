@@ -51,8 +51,6 @@
       .toString();
   };
 
-  setRatio($accountInfo.fromToken, $accountInfo.toToken);
-
   $: inputValue = from
     ? $accountInfo.fromTokenAmount
     : $accountInfo.toTokenAmount;
@@ -85,6 +83,8 @@
       });
     }
   }
+
+  setRatio($accountInfo.fromToken, $accountInfo.toToken);
 
   const setInputValues = (inputElement: HTMLInputElement) => {
     if (!isNaN(Number(inputElement.value))) {
@@ -161,7 +161,7 @@
       }
     }
 
-    await setRatio($accountInfo.fromToken, $accountInfo.toToken);
+    setRatio($accountInfo.fromToken, $accountInfo.toToken);
     setInputValues(inputElement);
   };
 </script>

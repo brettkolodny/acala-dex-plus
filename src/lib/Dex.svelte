@@ -5,6 +5,7 @@
   import Advanced from "./Advanced.svelte";
   import cogIcon from "../assets/icons/cog.svg";
   import loadingIcon from "../assets/icons/loading.svg";
+  import arrowIcon from "../assets/icons/arrow.svg";
 
   export let setShowToast: (
     type: "error" | "success",
@@ -63,12 +64,29 @@
 </script>
 
 <div
-  class={`flex flex-col justify-center items-center gap-2 w-[448px] p-2 bg-white dark:bg-base-800 rounded-xl shadow-xl transition-height`}
+  class={`flex flex-col justify-center items-center gap-1 w-[448px] p-2 bg-white dark:bg-base-800 rounded-xl shadow-xl transition-height`}
 >
   <DexInput from />
+
+  <div
+    class="relative flex justify-center items-center h-0 overflow-visible z-10"
+  >
+    <div
+      on:click={() => {
+        let toToken = $accountInfo.toToken;
+        $accountInfo.toToken = $accountInfo.fromToken;
+        $accountInfo.fromToken = toToken;
+      }}
+      class="flex flex-col justify-end items-center w-8 h-8 rounded-md bg-white dark:bg-base-800 cursor-pointer"
+    >
+      <div class="absolute w-full h-2 shadow-md" />
+      <img src={arrowIcon} alt="switch tokens" class="w-full h-full p-2" />
+    </div>
+  </div>
+
   <DexInput />
 
-  <div class="flex flex-row justify-between items-center w-full h-6">
+  <div class="flex flex-row justify-between items-center w-full h-6 my-1">
     <TokenRatio />
     <div
       on:click={() => (showAdvanced = !showAdvanced)}
