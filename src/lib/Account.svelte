@@ -13,14 +13,20 @@
 
   $: {
     const getAccountInfo = async () => {
-      // const accounts: string[] = await $provider.send("eth_requestAccounts", []);
-      const accounts = ["arst"];
-      address = `${accounts[0].slice(0, 6)}...${accounts[0].slice(
-        accounts[0].length - 4
-      )}`;
+      let account = "";
+      if ($provider.providerType === "eth") {
+        const accounts: string[] = await ($provider.provider as any).send(
+          "eth_requestAccounts",
+          []
+        );
+        account = accounts[0];
+        address = `${accounts[0].slice(0, 6)}...${accounts[0].slice(
+          accounts[0].length - 4
+        )}`;
+      }
 
       balance = new FixedPointNumber(
-        (await $provider.provider.getBalance(accounts[0])).toString(),
+        (await $provider.provider.getBalance(account)).toString(),
         4
       )
         .div(new FixedPointNumber(10 ** 18))
