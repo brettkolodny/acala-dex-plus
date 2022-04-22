@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { Chain } from "./tokens";
-  import { provider, signer } from "./directives/stores";
+  import { provider, signer } from "./stores";
   import { FixedPointNumber } from "@acala-network/sdk-core";
 
   const chain = getContext("chain");

@@ -6,15 +6,14 @@
     toTokenAmount,
     toToken,
     fromToken,
-  } from "./directives/stores";
-  import { accountInfo } from "./stores/accountInfo";
+  } from "./stores";
   import DexInput from "./DexInput.svelte";
   import TokenRatio from "./TokenRatio.svelte";
   import Advanced from "./Advanced.svelte";
   import cogIcon from "../assets/icons/cog.svg";
   import loadingIcon from "../assets/icons/loading.svg";
   import arrowIcon from "../assets/icons/arrow.svg";
-import { makeSwap } from "./Web3.svelte";
+  import { makeSwap } from "./Web3.svelte";
 
   export let setShowToast: (
     type: "error" | "success",

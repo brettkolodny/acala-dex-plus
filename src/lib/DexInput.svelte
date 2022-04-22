@@ -11,7 +11,7 @@
     toTokenContract,
     stableToken,
     signer,
-  } from "./directives/stores";
+  } from "./stores";
   import type { Token } from "./tokens";
   import TokenSelect from "./TokenSelect.svelte";
   import { getBalanceOf } from "./Web3.svelte";

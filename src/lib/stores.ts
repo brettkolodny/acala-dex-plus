@@ -1,8 +1,8 @@
 import { writable, derived, readable } from "svelte/store";
 import { providers, Signer, Contract, utils, BigNumber } from "ethers";
-import DexABI from "../../abis/DEX.json";
-import ERC20Abi from "../../abis/ERC20.json";
-import { tokens, Chain } from "../tokens";
+import DexABI from "../abis/DEX.json";
+import ERC20Abi from "../abis/ERC20.json";
+import { tokens, Chain } from "./tokens";
 
 const CHAIN: any = Chain.MANDALA;
 const DEX_ADDRESS_MANDALA = "0x0000000000000000000000000000000000000804";

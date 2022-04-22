@@ -1,6 +1,6 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
-  import { slippage } from "./directives/stores";
+  import { slippage } from "./stores";
 
   let customValue: string | null = null;
 

@@ -10,7 +10,7 @@
     toTokenContract,
     slippage,
     signer,
-  } from "./directives/stores";
+  } from "./stores";
   import { get } from "svelte/store";
   import { FixedPointNumber } from "@acala-network/sdk-core";
 

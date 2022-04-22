@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fromToken, toToken, ratio } from "./directives/stores";
+  import { fromToken, toToken, ratio } from "./stores";
 
   const getRatioDisplay = (r: string | null) => {
     if (r) {
