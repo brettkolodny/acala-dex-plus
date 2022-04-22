@@ -1,4 +1,12 @@
 <script lang="ts">
+  import {
+    signer,
+    provider,
+    fromTokenAmount,
+    toTokenAmount,
+    toToken,
+    fromToken,
+  } from "./directives/stores";
   import { accountInfo } from "./stores/accountInfo";
   import DexInput from "./DexInput.svelte";
   import TokenRatio from "./TokenRatio.svelte";
@@ -6,6 +14,7 @@
   import cogIcon from "../assets/icons/cog.svg";
   import loadingIcon from "../assets/icons/loading.svg";
   import arrowIcon from "../assets/icons/arrow.svg";
+import { makeSwap } from "./Web3.svelte";
 
   export let setShowToast: (
     type: "error" | "success",
@@ -18,8 +27,8 @@
 
   const connectWallet = async () => {
     try {
-      await $accountInfo.provider.send("eth_requestAccounts", []);
-      $accountInfo.signer = $accountInfo.provider.getSigner();
+      await provider.send("eth_requestAccounts", []);
+      $signer = provider.getSigner();
     } catch (e: any) {
       setShowToast("error", "Could not Connect", e.message);
     } finally {
@@ -29,14 +38,14 @@
 
   const onSwapClicked = async () => {
     loading = true;
-    if ($accountInfo.signer) {
+    if ($signer) {
       try {
-        const transaction = await $accountInfo.makeSwap();
+        const transaction = await makeSwap();
         transaction
           .wait()
           .then((_value) => {
-            $accountInfo.fromTokenAmount = "";
-            $accountInfo.toTokenAmount = "";
+            $fromTokenAmount = "";
+            $toTokenAmount = "";
             setShowToast("success", "TX Success");
           })
           .catch((reason: any) => {
@@ -73,9 +82,9 @@
   >
     <div
       on:click={() => {
-        let toToken = $accountInfo.toToken;
-        $accountInfo.toToken = $accountInfo.fromToken;
-        $accountInfo.fromToken = toToken;
+        let _toToken = $toToken;
+        $toToken = $fromToken;
+        $fromToken = _toToken;
       }}
       class="flex flex-col justify-end items-center w-8 h-8 rounded-md bg-white dark:bg-base-800 cursor-pointer"
     >
@@ -108,7 +117,7 @@
   >
     {#if loading}
       <img src={loadingIcon} class="animate-spin w-8" alt="loading" />
-    {:else if !$accountInfo.signer}
+    {:else if !$signer}
       Connect Extension
     {:else}
       Swap

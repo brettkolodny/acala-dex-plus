@@ -1,9 +1,20 @@
 <script lang="ts">
   import { FixedPointNumber } from "@acala-network/sdk-core";
-  import { accountInfo } from "./stores/accountInfo";
+  import {
+    dexContract,
+    fromToken,
+    fromTokenAmount,
+    fromTokenContract,
+    ratio,
+    toToken,
+    toTokenAmount,
+    toTokenContract,
+    stableToken,
+    signer,
+  } from "./directives/stores";
   import type { Token } from "./tokens";
   import TokenSelect from "./TokenSelect.svelte";
-  import { getBalanceOf } from "./web3";
+  import { getBalanceOf } from "./Web3.svelte";
 
   export let from: boolean = false;
 
@@ -14,7 +25,7 @@
   let inputElement: HTMLInputElement;
 
   const setRatio = async (fromToken: Token, toToken: Token) => {
-    const decimals = await $accountInfo.fromTokenContract.decimals();
+    const decimals = await $fromTokenContract.decimals();
     const oneToken = FixedPointNumber.ONE.mul(
       new FixedPointNumber(10 ** decimals)
     );
@@ -23,7 +34,7 @@
     try {
       amount = new FixedPointNumber(
         (
-          await $accountInfo.dexContract.getSwapTargetAmount(
+          await $dexContract.getSwapTargetAmount(
             [fromToken.address, toToken.address],
             oneToken.toString()
           )
@@ -32,89 +43,80 @@
     } catch {
       amount = new FixedPointNumber(
         (
-          await $accountInfo.dexContract.getSwapTargetAmount(
-            [
-              fromToken.address,
-              $accountInfo.stableToken.address,
-              toToken.address,
-            ],
+          await $dexContract.getSwapTargetAmount(
+            [fromToken.address, $stableToken.address, toToken.address],
             oneToken.toString()
           )
         ).toString()
       );
     }
 
-    const targetTokenDecimals = await $accountInfo.toTokenContract.decimals();
+    const targetTokenDecimals = await $toTokenContract.decimals();
 
-    $accountInfo.ratio = amount
+    $ratio = amount
       .div(new FixedPointNumber(10 ** targetTokenDecimals))
       .toString();
   };
 
-  $: inputValue = from
-    ? $accountInfo.fromTokenAmount
-    : $accountInfo.toTokenAmount;
+  $: inputValue = from ? $fromTokenAmount : $toTokenAmount;
 
   $: {
     if (inputElement) {
       if (from) {
-        inputElement.value = $accountInfo.fromTokenAmount;
+        inputElement.value = $fromTokenAmount;
       } else {
-        inputElement.value = $accountInfo.toTokenAmount;
+        inputElement.value = $toTokenAmount;
       }
     }
   }
 
   $: {
     if (from) {
-      selectedToken = $accountInfo.fromToken;
+      selectedToken = $fromToken;
     } else {
-      selectedToken = $accountInfo.toToken;
+      selectedToken = $toToken;
     }
   }
 
   $: {
-    if (from && $accountInfo.signer) {
-      getBalanceOf(
-        from ? $accountInfo.fromTokenContract : $accountInfo.toTokenContract,
-        $accountInfo
-      ).then((balance: number) => {
-        max = balance;
-      });
+    if (from && $signer) {
+      getBalanceOf(from ? $fromTokenContract : $toTokenContract, $signer).then(
+        (balance: number) => {
+          max = balance;
+        }
+      );
     }
   }
 
-  setRatio($accountInfo.fromToken, $accountInfo.toToken);
+  setRatio($fromToken, $toToken);
 
   const setInputValues = (inputElement: HTMLInputElement) => {
     if (!isNaN(Number(inputElement.value))) {
       if (from) {
-        $accountInfo.fromTokenAmount = inputElement.value;
+        $fromTokenAmount = inputElement.value;
 
-        const newAmount = new FixedPointNumber(
-          $accountInfo.fromTokenAmount
-        ).mul(new FixedPointNumber($accountInfo.ratio));
-        $accountInfo.toTokenAmount =
+        const newAmount = new FixedPointNumber($fromTokenAmount).mul(
+          new FixedPointNumber($ratio)
+        );
+        $toTokenAmount =
           !newAmount.isNaN() && !newAmount.isZero() ? newAmount.toString() : "";
 
         let toInput = document.getElementById("to-input") as HTMLInputElement;
-        toInput.value = $accountInfo.toTokenAmount || "";
+        toInput.value = $toTokenAmount || "";
       } else {
-        $accountInfo.toTokenAmount = inputElement.value;
+        $toTokenAmount = inputElement.value;
 
-        const newAmount = new FixedPointNumber($accountInfo.toTokenAmount).div(
-          new FixedPointNumber($accountInfo.ratio)
+        const newAmount = new FixedPointNumber($toTokenAmount).div(
+          new FixedPointNumber($ratio)
         );
-        $accountInfo.fromTokenAmount =
+        $fromTokenAmount =
           !newAmount.isNaN() && !newAmount.isZero() ? newAmount.toString() : "";
 
         let toInput = document.getElementById("from-input") as HTMLInputElement;
-        toInput.value = $accountInfo.fromTokenAmount;
+        toInput.value = $fromTokenAmount;
       }
     } else {
-      inputElement.value = from
-        ? $accountInfo.fromTokenAmount
-        : $accountInfo.toTokenAmount;
+      inputElement.value = from ? $fromTokenAmount : $toTokenAmount;
     }
   };
 
@@ -134,34 +136,24 @@
 
   const setSelectedToken = async (token: Token) => {
     if (from) {
-      if (token == $accountInfo.toToken) {
-        const from = $accountInfo.fromToken;
-        $accountInfo.fromToken = $accountInfo.toToken;
-        $accountInfo.toToken = from;
-
-        const fromContract = $accountInfo.fromTokenContract;
-        $accountInfo.fromTokenContract = $accountInfo.toTokenContract;
-        $accountInfo.toTokenContract = fromContract;
+      if (token == $toToken) {
+        const from = $fromToken;
+        $fromToken = $toToken;
+        $toToken = from;
       } else {
-        $accountInfo.fromToken = token;
-        $accountInfo.updateContract(true);
+        $fromToken = token;
       }
     } else {
-      if (token == $accountInfo.fromToken) {
-        const to = $accountInfo.toToken;
-        $accountInfo.toToken = $accountInfo.fromToken;
-        $accountInfo.fromToken = to;
-
-        const fromContract = $accountInfo.fromTokenContract;
-        $accountInfo.fromTokenContract = $accountInfo.toTokenContract;
-        $accountInfo.toTokenContract = fromContract;
+      if (token == $fromToken) {
+        const to = $toToken;
+        $toToken = $fromToken;
+        $fromToken = to;
       } else {
-        $accountInfo.toToken = token;
-        $accountInfo.updateContract(false);
+        $toToken = token;
       }
     }
 
-    setRatio($accountInfo.fromToken, $accountInfo.toToken);
+    setRatio($fromToken, $toToken);
     setInputValues(inputElement);
   };
 </script>
@@ -175,9 +167,7 @@
     {#if inputValue && inputValue.length < 12}
       <span
         class={`${max && Number(inputValue) > max ? "text-primary-500" : ""}`}
-        >{from
-          ? $accountInfo.fromTokenAmount
-          : $accountInfo.toTokenAmount}</span
+        >{from ? $fromTokenAmount : $toTokenAmount}</span
       >
     {:else if inputValue}
       <div />

@@ -1,24 +1,16 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
-  import { accountInfo } from "./stores/accountInfo";
+  import { slippage } from "./directives/stores";
 
-  let slippage = 0.5;
   let customValue: string | null = null;
-  // let priceImpact = 0;
-
-  // const getPriceImpact = async () => {
-  //   const poolInfo = await $accountInfo.dexContract.
-  // }
-
-  $: $accountInfo.slippage = slippage;
 
   const onCustomInput = (e: Event) => {
     const value = Number((e.target as HTMLInputElement).value);
     customValue = (e.target as HTMLInputElement).value;
     if (!value) {
-      slippage = 0.5;
+      $slippage = 0.5;
     } else {
-      slippage = value;
+      $slippage = value;
     }
   };
 </script>
@@ -31,31 +23,31 @@
     <div class="text-base-900 dark:text-base-200">Slippage</div>
     <div
       class={`flex justify-center items-center w-14 h-8 rounded-md text-base-800 dark:text-white cursor-pointer transition-all ${
-        slippage === 0.1 && !customValue
+        $slippage === 0.1 && !customValue
           ? "bg-acala-400 dark:bg-primary-500 shadow-sm"
           : "bg-base-50 dark:bg-base-400 shadow-inner-input"
       }`}
-      on:click={() => (slippage = 0.1)}
+      on:click={() => ($slippage = 0.1)}
     >
       0.1%
     </div>
     <div
       class={`flex justify-center items-center w-14 h-8 rounded-md text-base-800 dark:text-white cursor-pointer transition-all ${
-        slippage === 0.5 && !customValue
+        $slippage === 0.5 && !customValue
           ? "bg-acala-400 dark:bg-primary-500 shadow-sm"
           : "bg-base-50 dark:bg-base-400 shadow-inner-input"
       }`}
-      on:click={() => (slippage = 0.5)}
+      on:click={() => ($slippage = 0.5)}
     >
       0.5%
     </div>
     <div
       class={`flex justify-center items-center w-14 h-8 rounded-md text-base-800 dark:text-white cursor-pointer transition-all ${
-        slippage === 1 && !customValue
+        $slippage === 1 && !customValue
           ? "bg-acala-400 dark:bg-primary-500 shadow-sm"
           : "bg-base-50 dark:bg-base-400 shadow-inner-input"
       }`}
-      on:click={() => (slippage = 1)}
+      on:click={() => ($slippage = 1)}
     >
       1.0%
     </div>

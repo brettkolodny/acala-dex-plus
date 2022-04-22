@@ -1,9 +1,5 @@
 <script lang="ts">
-  import { FixedPointNumber } from "@acala-network/sdk-core";
-  import { accountInfo } from "./stores/accountInfo";
-  import type { Token } from "./tokens";
-
-  let ratio = null;
+  import { fromToken, toToken, ratio } from "./directives/stores";
 
   const getRatioDisplay = (r: string | null) => {
     if (r) {
@@ -16,21 +12,15 @@
     return null;
   };
 
-  $: ratio = getRatioDisplay($accountInfo.ratio);
-  $: fromTokenSymbol = $accountInfo.fromToken.symbol;
-  $: toTokenSymbol = $accountInfo.toToken.symbol;
-  $: {
-    fromTokenSymbol;
-    toTokenSymbol;
-
-    ratio = null;
-  }
+  $: ratioDisplay = getRatioDisplay($ratio);
+  $: fromTokenSymbol = $fromToken.symbol;
+  $: toTokenSymbol = $toToken.symbol;
 </script>
 
 <div>
-  {#if ratio}
+  {#if ratioDisplay}
     <div class="text-base-800 dark:text-base-300">
-      1 {fromTokenSymbol} ≈ {ratio}
+      1 {fromTokenSymbol} ≈ {ratioDisplay}
       {toTokenSymbol}
     </div>
   {/if}
