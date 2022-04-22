@@ -8,34 +8,34 @@
   const nativeSymbol =
     chain === Chain.ACALA || chain === Chain.MANDALA ? "ACA" : "KAR";
 
-  let address = null;
-  let balance = null;
+  let address: string | null = null;
+  let balance: string | null = null;
 
   $: {
     const getAccountInfo = async () => {
-      let account = "";
-      if ($provider.providerType === "eth") {
-        const accounts: string[] = await ($provider.provider as any).send(
-          "eth_requestAccounts",
-          []
-        );
-        account = accounts[0];
-        address = `${accounts[0].slice(0, 6)}...${accounts[0].slice(
-          accounts[0].length - 4
-        )}`;
-      }
+      if ($provider && $signer) {
+        let account = "";
+        if ($provider.providerType === "eth") {
+          const accounts: string[] = await ($provider.provider as any).send(
+            "eth_requestAccounts",
+            []
+          );
+          account = accounts[0];
+          address = `${accounts[0].slice(0, 6)}...${accounts[0].slice(
+            accounts[0].length - 4
+          )}`;
+        }
 
-      balance = new FixedPointNumber(
-        (await $provider.provider.getBalance(account)).toString(),
-        4
-      )
-        .div(new FixedPointNumber(10 ** 18))
-        .toString();
+        balance = new FixedPointNumber(
+          (await $provider.provider.getBalance(account)).toString(),
+          4
+        )
+          .div(new FixedPointNumber(10 ** 18))
+          .toString();
+      }
     };
 
-    if ($signer) {
-      getAccountInfo();
-    }
+    getAccountInfo();
   }
 </script>
 

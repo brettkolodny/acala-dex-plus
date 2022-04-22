@@ -1,6 +1,6 @@
 import { writable, derived } from "svelte/store";
 import { Signer as EthSigner, Contract } from "ethers";
-import MultiProvider from "./MultiProvider";
+import type MultiProvider from "./MultiProvider";
 import DexABI from "../abis/DEX.json";
 import ERC20Abi from "../abis/ERC20.json";
 import { tokens, Chain } from "./tokens";
@@ -9,12 +9,7 @@ import type { Signer as BodhiSigner } from "@acala-network/bodhi";
 const CHAIN: any = Chain.MANDALA;
 const DEX_ADDRESS_MANDALA = "0x0000000000000000000000000000000000000804";
 
-// export const provider = writable<Provider | providers.Web3Provider | null>(
-//   new providers.Web3Provider((window as any).ethereum)
-// );
-export const provider = writable<MultiProvider | null>(
-  MultiProvider.createEthProvider()
-);
+export const provider = writable<MultiProvider | null>(null);
 
 export const signer = writable<EthSigner | BodhiSigner | null>(null);
 
@@ -41,14 +36,22 @@ export const stableToken = writable(_toToken);
 export const fromTokenContract = derived(
   [fromToken, provider],
   ([$fromToken, $provider]) => {
-    return new Contract($fromToken.address, ERC20Abi, $provider.provider);
+    if ($provider) {
+      return new Contract($fromToken.address, ERC20Abi, $provider.provider);
+    } else {
+      return null;
+    }
   }
 );
 
 export const toTokenContract = derived(
   [toToken, provider],
   ([$toToken, $provider]) => {
-    return new Contract($toToken.address, ERC20Abi, $provider.provider);
+    if ($provider) {
+      return new Contract($toToken.address, ERC20Abi, $provider.provider);
+    } else {
+      return null;
+    }
   }
 );
 
@@ -57,12 +60,14 @@ export const dexContract = derived(
   ([$signer, $provider]) => {
     if ($signer) {
       return new Contract(DEX_ADDRESS_MANDALA, DexABI, $signer);
-    } else {
+    } else if ($provider) {
       return new Contract(DEX_ADDRESS_MANDALA, DexABI, $provider.provider);
+    } else {
+      return null;
     }
   }
 );
 
 export const slippage = writable(0.5);
 
-export const ratio = writable(null);
+export const ratio = writable<string | null>(null);

@@ -11,6 +11,7 @@
     toTokenContract,
     stableToken,
     signer,
+    provider,
   } from "./stores";
   import type { Token } from "./tokens";
   import TokenSelect from "./TokenSelect.svelte";
@@ -21,41 +22,45 @@
   const id = from ? "from-input" : "to-input";
 
   let selectedToken: Token;
-  let max = null;
+  let max: number | null = null;
   let inputElement: HTMLInputElement;
 
+  $: console.log($provider);
+
   const setRatio = async (fromToken: Token, toToken: Token) => {
-    const decimals = await $fromTokenContract.decimals();
-    const oneToken = FixedPointNumber.ONE.mul(
-      new FixedPointNumber(10 ** decimals)
-    );
+    if ($provider) {
+      const decimals = await $fromTokenContract!.decimals();
+      const oneToken = FixedPointNumber.ONE.mul(
+        new FixedPointNumber(10 ** decimals)
+      );
 
-    let amount: FixedPointNumber;
-    try {
-      amount = new FixedPointNumber(
-        (
-          await $dexContract.getSwapTargetAmount(
-            [fromToken.address, toToken.address],
-            oneToken.toString()
-          )
-        ).toString()
-      );
-    } catch {
-      amount = new FixedPointNumber(
-        (
-          await $dexContract.getSwapTargetAmount(
-            [fromToken.address, $stableToken.address, toToken.address],
-            oneToken.toString()
-          )
-        ).toString()
-      );
+      let amount: FixedPointNumber;
+      try {
+        amount = new FixedPointNumber(
+          (
+            await $dexContract!.getSwapTargetAmount(
+              [fromToken.address, toToken.address],
+              oneToken.toString()
+            )
+          ).toString()
+        );
+      } catch {
+        amount = new FixedPointNumber(
+          (
+            await $dexContract!.getSwapTargetAmount(
+              [fromToken.address, $stableToken.address, toToken.address],
+              oneToken.toString()
+            )
+          ).toString()
+        );
+      }
+
+      const targetTokenDecimals = await $toTokenContract!.decimals();
+
+      $ratio = amount
+        .div(new FixedPointNumber(10 ** targetTokenDecimals))
+        .toString();
     }
-
-    const targetTokenDecimals = await $toTokenContract.decimals();
-
-    $ratio = amount
-      .div(new FixedPointNumber(10 ** targetTokenDecimals))
-      .toString();
   };
 
   $: inputValue = from ? $fromTokenAmount : $toTokenAmount;
@@ -80,40 +85,55 @@
 
   $: {
     if (from && $signer) {
-      getBalanceOf(from ? $fromTokenContract : $toTokenContract, $signer).then(
-        (balance: number) => {
-          max = balance;
-        }
-      );
+      getBalanceOf(
+        from ? $fromTokenContract! : $toTokenContract!,
+        $signer
+      ).then((balance: number) => {
+        max = balance;
+      });
     }
   }
 
-  setRatio($fromToken, $toToken);
+  $: {
+    if ($provider) {
+      setRatio($fromToken, $toToken);
+    }
+  }
 
   const setInputValues = (inputElement: HTMLInputElement) => {
     if (!isNaN(Number(inputElement.value))) {
       if (from) {
         $fromTokenAmount = inputElement.value;
 
-        const newAmount = new FixedPointNumber($fromTokenAmount).mul(
-          new FixedPointNumber($ratio)
-        );
-        $toTokenAmount =
-          !newAmount.isNaN() && !newAmount.isZero() ? newAmount.toString() : "";
+        if ($provider) {
+          const newAmount = new FixedPointNumber($fromTokenAmount).mul(
+            new FixedPointNumber($ratio ? $ratio : "0")
+          );
+          $toTokenAmount =
+            !newAmount.isNaN() && !newAmount.isZero()
+              ? newAmount.toString()
+              : "";
 
-        let toInput = document.getElementById("to-input") as HTMLInputElement;
-        toInput.value = $toTokenAmount || "";
+          let toInput = document.getElementById("to-input") as HTMLInputElement;
+          toInput.value = $toTokenAmount || "";
+        }
       } else {
         $toTokenAmount = inputElement.value;
 
-        const newAmount = new FixedPointNumber($toTokenAmount).div(
-          new FixedPointNumber($ratio)
-        );
-        $fromTokenAmount =
-          !newAmount.isNaN() && !newAmount.isZero() ? newAmount.toString() : "";
+        if ($provider) {
+          const newAmount = new FixedPointNumber($toTokenAmount).div(
+            new FixedPointNumber($ratio ? $ratio : "0")
+          );
+          $fromTokenAmount =
+            !newAmount.isNaN() && !newAmount.isZero()
+              ? newAmount.toString()
+              : "";
 
-        let toInput = document.getElementById("from-input") as HTMLInputElement;
-        toInput.value = $fromTokenAmount;
+          let toInput = document.getElementById(
+            "from-input"
+          ) as HTMLInputElement;
+          toInput.value = $fromTokenAmount;
+        }
       }
     } else {
       inputElement.value = from ? $fromTokenAmount : $toTokenAmount;
@@ -153,7 +173,6 @@
       }
     }
 
-    setRatio($fromToken, $toToken);
     setInputValues(inputElement);
   };
 </script>
