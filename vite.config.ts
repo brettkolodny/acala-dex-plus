@@ -6,5 +6,8 @@ export default defineConfig({
   server: {
     port: 9090,
   },
+  build: {
+    target: ["es2020"],
+  },
   plugins: [svelte()],
 });

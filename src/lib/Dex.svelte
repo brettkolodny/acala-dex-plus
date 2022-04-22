@@ -26,8 +26,11 @@
 
   const connectWallet = async () => {
     try {
-      await provider.send("eth_requestAccounts", []);
-      $signer = provider.getSigner();
+      const ethProvider = $provider.provider as any;
+      if ($provider.providerType === "eth") {
+        await ethProvider.send("eth_requestAccounts", []);
+        $signer = ethProvider.getSigner();
+      }
     } catch (e: any) {
       setShowToast("error", "Could not Connect", e.message);
     } finally {
