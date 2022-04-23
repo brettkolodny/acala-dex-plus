@@ -1,4 +1,5 @@
-import type { Provider as BodhiProvider } from "@acala-network/bodhi";
+import { Provider as BodhiProvider } from "@acala-network/bodhi";
+import { WsProvider } from "@polkadot/api";
 import { providers } from "ethers";
 
 export default class MultiProvider {
@@ -17,6 +18,8 @@ export default class MultiProvider {
 
   public static createBodhiProvider(): MultiProvider {
     const newProvider = new MultiProvider();
+    const wsProvider = new WsProvider("wss://mandala.polkawallet.io");
+    newProvider._provider = new BodhiProvider({ provider: wsProvider });
 
     return newProvider;
   }

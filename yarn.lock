@@ -1023,6 +1023,28 @@
     eventemitter3 "^4.0.7"
     rxjs "^7.5.5"
 
+"@polkadot/extension-dapp@^0.43.1":
+  version "0.43.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/extension-dapp/-/extension-dapp-0.43.1.tgz#a13bf5092f9e8c734080b856c724194d69684719"
+  integrity sha512-pEBbVg+UbFAhDNYa6q7YoXimCRPI8Cr9F77SXnqbvKAxFjnHBdkE3GklROFWsdV+KASOqFJQUXqxiKsbv7oJEw==
+  dependencies:
+    "@babel/runtime" "^7.17.9"
+    "@polkadot/extension-inject" "^0.43.1"
+    "@polkadot/util" "^9.0.1"
+    "@polkadot/util-crypto" "^9.0.1"
+
+"@polkadot/extension-inject@^0.43.1":
+  version "0.43.1"
+  resolved "https://registry.yarnpkg.com/@polkadot/extension-inject/-/extension-inject-0.43.1.tgz#867e25e581d46ee8a7659f401b51f4575e67fbf1"
+  integrity sha512-IJGxk9BLG212rVFd5aqqcQK2fobdyBY9SPdswu7Aj8bHHoObZmS/5H56oMp86JSGexr0reYssdG4BlOP+AN/og==
+  dependencies:
+    "@babel/runtime" "^7.17.9"
+    "@polkadot/rpc-provider" "^8.0.1"
+    "@polkadot/types" "^8.0.1"
+    "@polkadot/util" "^9.0.1"
+    "@polkadot/util-crypto" "^9.0.1"
+    "@polkadot/x-global" "^9.0.1"
+
 "@polkadot/keyring@^8.7.1", "@polkadot/keyring@~8.7.1":
   version "8.7.1"
   resolved "https://registry.yarnpkg.com/@polkadot/keyring/-/keyring-8.7.1.tgz#07cf6d6ee351dcf70fbf965b1d6d96c5025ae1b8"
@@ -1166,7 +1188,7 @@
     mock-socket "^9.1.2"
     nock "^13.2.4"
 
-"@polkadot/rpc-provider@8.1.1":
+"@polkadot/rpc-provider@8.1.1", "@polkadot/rpc-provider@^8.0.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@polkadot/rpc-provider/-/rpc-provider-8.1.1.tgz#bd0e57e8fd15e9bac87bbf667fb484036cf7595d"
   integrity sha512-PFQYhVDxayQ8BP6xk2ZFvrfG/wWZ3BIEUesdCiZU8Nb1UbTXMQQbLvfI+14Q46Z426MR9UNHxrzi4AlKbPWqCQ==
@@ -1354,7 +1376,7 @@
     "@polkadot/util-crypto" "^8.7.1"
     rxjs "^7.5.5"
 
-"@polkadot/types@8.1.1":
+"@polkadot/types@8.1.1", "@polkadot/types@^8.0.1":
   version "8.1.1"
   resolved "https://registry.yarnpkg.com/@polkadot/types/-/types-8.1.1.tgz#43e5fb78e6214e6af7c5edbdb6ac69d5b919421d"
   integrity sha512-x9WDx9XcaSkQGlnk2MNu+49oK80s8Js7lr0mmCinV12m8+3si+GvIOvnuV3ydmWgWtpTt2ERfN+T8a/6f50EpA==

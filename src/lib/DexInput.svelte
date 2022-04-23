@@ -25,8 +25,6 @@
   let max: number | null = null;
   let inputElement: HTMLInputElement;
 
-  $: console.log($provider);
-
   const setRatio = async (fromToken: Token, toToken: Token) => {
     if ($provider) {
       const decimals = await $fromTokenContract!.decimals();
