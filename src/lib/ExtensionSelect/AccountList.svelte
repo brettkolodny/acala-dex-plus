@@ -3,7 +3,7 @@
 
   export let accounts: Array<{ name?: string; address: string }>;
   export let createBodhiSigner: (address: string) => void;
-  export let isTalisman = true;
+  // export let isTalisman = true;
 
   const formatAddress = (address: string): string => {
     return `${address.slice(0, 8)}...${address.slice(address.length - 8)}`;

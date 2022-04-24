@@ -33,6 +33,8 @@ const _toToken =
 export const toToken = writable(_toToken);
 export const stableToken = writable(_toToken);
 
+export const transactionCount = writable(0);
+
 export const fromTokenContract = derived(
   [fromToken, provider],
   ([$fromToken, $provider]) => {

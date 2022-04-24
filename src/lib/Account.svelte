@@ -1,7 +1,7 @@
 <script lang="ts">
   import { getContext } from "svelte";
   import { Chain } from "./tokens";
-  import { provider, signer } from "./stores";
+  import { provider, signer, transactionCount } from "./stores";
   import { FixedPointNumber } from "@acala-network/sdk-core";
 
   const chain = getContext("chain");
@@ -12,6 +12,8 @@
   let balance: string | null = null;
 
   $: {
+    $transactionCount;
+
     const getAccountInfo = async () => {
       if ($provider && $signer) {
         let account = "";

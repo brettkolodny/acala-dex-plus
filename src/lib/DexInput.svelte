@@ -12,6 +12,7 @@
     stableToken,
     signer,
     provider,
+    transactionCount,
   } from "./stores";
   import type { Token } from "./tokens";
   import TokenSelect from "./TokenSelect.svelte";
@@ -82,6 +83,7 @@
   }
 
   $: {
+    $transactionCount;
     if (from && $signer) {
       getBalanceOf(
         from ? $fromTokenContract! : $toTokenContract!,
@@ -94,8 +96,14 @@
 
   $: {
     if ($provider) {
+      $ratio = null;
       setRatio($fromToken, $toToken);
     }
+  }
+
+  $: {
+    selectedToken;
+    max = null;
   }
 
   const setInputValues = (inputElement: HTMLInputElement) => {

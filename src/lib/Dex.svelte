@@ -6,6 +6,7 @@
     toTokenAmount,
     toToken,
     fromToken,
+    transactionCount,
   } from "./stores";
   import DexInput from "./DexInput.svelte";
   import TokenRatio from "./TokenRatio.svelte";
@@ -26,20 +27,6 @@
   let showAdvanced = false;
   let loading = false;
 
-  // const connectWallet = async () => {
-  //   try {
-  //     const ethProvider = $provider.provider as any;
-  //     if ($provider.providerType === "eth") {
-  //       await ethProvider.send("eth_requestAccounts", []);
-  //       $signer = ethProvider.getSigner();
-  //     }
-  //   } catch (e: any) {
-  //     setShowToast("error", "Could not Connect", e.message);
-  //   } finally {
-  //     loading = false;
-  //   }
-  // };
-
   const onSwapClicked = async () => {
     if ($signer) {
       loading = true;
@@ -50,6 +37,7 @@
           .then((_value) => {
             $fromTokenAmount = "";
             $toTokenAmount = "";
+            $transactionCount += 1;
             setShowToast("success", "TX Success");
           })
           .catch((reason: any) => {
