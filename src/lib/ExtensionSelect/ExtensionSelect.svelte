@@ -18,6 +18,7 @@
   import MultiProvider from "../MultiProvider";
   import MetamaskLogo from "../../assets/icons/Metamask.svg";
   import TalismanLogo from "../../assets/icons/Talisman.svg";
+  import PolkadotjsLogo from "../../assets/icons/Polkadot-js.svg";
   import LoadingIcon from "../../assets/icons/loading.svg";
 
   interface Account {
@@ -31,6 +32,7 @@
   let bodhiExtension: InjectedExtension | null;
   let bindAddress: string | null = null;
   let loading = false;
+  let isTalisman = false;
 
   const connectMetamask = async () => {
     $provider = MultiProvider.createEthProvider();
@@ -40,15 +42,16 @@
     close();
   };
 
-  const connectTalisman = async () => {
+  const connectSubstrate = async (extensionName: string) => {
     await cryptoWaitReady();
     await web3Enable("DEX+");
-    const talisman = await web3FromSource("talisman");
+    const talisman = await web3FromSource(extensionName);
     bodhiExtension = talisman;
     const bodhiProvider = MultiProvider.createBodhiProvider();
     $provider = bodhiProvider;
 
     const injectedAccounts = await talisman.accounts.get();
+    isTalisman = extensionName === "talisman";
     accounts = injectedAccounts.map((account) => ({
       name: account.name,
       address: account.address,
@@ -101,21 +104,27 @@
           clearBindAddress={() => (bindAddress = null)}
         />
       {:else if accounts && accounts.length > 0}
-        <AccountList {accounts} {createBodhiSigner} />
+        <AccountList {accounts} {createBodhiSigner} {isTalisman} />
       {:else if accounts}
         <div>No accounts</div>
       {:else}
         <div
-          on:click={connectTalisman}
+          on:click={() => connectSubstrate("talisman")}
           class="flex justify-center items-center w-64 h-12 bg-white dark:bg-base-100 rounded-lg cursor-pointer"
         >
-          <img src={TalismanLogo} alt="talisman" />
+          <img class="h-8" src={TalismanLogo} alt="talisman" />
+        </div>
+        <div
+          on:click={() => connectSubstrate("polkadot-js")}
+          class="flex justify-center items-center w-64 h-12 bg-white dark:bg-base-100 rounded-lg cursor-pointer"
+        >
+          <img class="h-8" src={PolkadotjsLogo} alt="polkadot-js" />
         </div>
         <div
           on:click={connectMetamask}
           class="flex justify-center items-center w-64 h-12 bg-white dark:bg-base-100 rounded-lg cursor-pointer"
         >
-          <img src={MetamaskLogo} alt="metamask" />
+          <img class="h-8" src={MetamaskLogo} alt="metamask" />
         </div>
       {/if}
     </div>
