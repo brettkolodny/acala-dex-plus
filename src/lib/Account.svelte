@@ -21,17 +21,21 @@
             []
           );
           account = accounts[0];
-          address = `${accounts[0].slice(0, 6)}...${accounts[0].slice(
-            accounts[0].length - 4
-          )}`;
+        } else {
+          account = await $signer.getAddress();
         }
 
-        balance = new FixedPointNumber(
-          (await $provider.provider.getBalance(account)).toString(),
-          4
-        )
-          .div(new FixedPointNumber(10 ** 18))
-          .toString();
+        if (account) {
+          address = `${account.slice(0, 6)}...${account.slice(
+            account.length - 4
+          )}`;
+          balance = new FixedPointNumber(
+            (await $provider.provider.getBalance(account)).toString(),
+            4
+          )
+            .div(new FixedPointNumber(10 ** 18))
+            .toString();
+        }
       }
     };
 

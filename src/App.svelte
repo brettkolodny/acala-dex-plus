@@ -4,7 +4,7 @@
   import Dex from "./lib/Dex.svelte";
   import Toast from "./lib/Toast.svelte";
   import Account from "./lib/Account.svelte";
-  import ExtensionSelect from "./lib/ExtensionSelect.svelte";
+  import ExtensionSelect from "./lib/ExtensionSelect/ExtensionSelect.svelte";
 
   let showExtensionSelect = false;
   let showToast = false;
