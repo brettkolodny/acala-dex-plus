@@ -19,7 +19,7 @@ export enum Chain {
 export interface Token {
   symbol: string;
   address: string;
-  chains?: Chain[];
+  chains: Chain[];
   img?: string;
 }
 
@@ -51,10 +51,12 @@ export const tokens: Token[] = [
   {
     symbol: "RENBTC",
     address: "0x0000000000000000000100000000000000000014",
+    chains: [],
   },
   {
     symbol: "CASH",
     address: "0x0000000000000000000100000000000000000015",
+    chains: [],
   },
   {
     symbol: "KAR",
@@ -95,6 +97,7 @@ export const tokens: Token[] = [
   {
     symbol: "vsKSM",
     address: "0x00000000000000000001000000000000000000A9",
+    chains: [],
   },
   {
     symbol: "PHA",
@@ -111,5 +114,6 @@ export const tokens: Token[] = [
   {
     symbol: "kBTC",
     address: "0x00000000000000000001000000000000000000aC",
+    chains: [],
   },
 ];

@@ -21,23 +21,28 @@
     details?: string
   ) => void;
 
+  export let showExtensionSelect: () => void;
+
   let showAdvanced = false;
   let loading = false;
 
-  const connectWallet = async () => {
-    try {
-      await provider.send("eth_requestAccounts", []);
-      $signer = provider.getSigner();
-    } catch (e: any) {
-      setShowToast("error", "Could not Connect", e.message);
-    } finally {
-      loading = false;
-    }
-  };
+  // const connectWallet = async () => {
+  //   try {
+  //     const ethProvider = $provider.provider as any;
+  //     if ($provider.providerType === "eth") {
+  //       await ethProvider.send("eth_requestAccounts", []);
+  //       $signer = ethProvider.getSigner();
+  //     }
+  //   } catch (e: any) {
+  //     setShowToast("error", "Could not Connect", e.message);
+  //   } finally {
+  //     loading = false;
+  //   }
+  // };
 
   const onSwapClicked = async () => {
-    loading = true;
     if ($signer) {
+      loading = true;
       try {
         const transaction = await makeSwap();
         transaction
@@ -66,7 +71,7 @@
         loading = false;
       }
     } else {
-      await connectWallet();
+      showExtensionSelect();
     }
   };
 </script>

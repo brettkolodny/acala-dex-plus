@@ -28,21 +28,21 @@
   const getParams = async () => {
     let path = [get(fromToken).address, get(toToken).address];
 
-    const supplyAmountDecimals = await get(fromTokenContract).decimals();
+    const supplyAmountDecimals = await get(fromTokenContract)!.decimals();
     const totalSupply = utils.parseUnits(
       trimDecimals(get(fromTokenAmount), supplyAmountDecimals),
       supplyAmountDecimals
     );
 
-    const targetAmountDecimals = await get(toTokenContract).decimals();
+    const targetAmountDecimals = await get(toTokenContract)!.decimals();
 
     let target: BigNumber;
 
     try {
-      target = await get(dexContract).getSwapTargetAmount(path, totalSupply);
+      target = await get(dexContract)!.getSwapTargetAmount(path, totalSupply);
     } catch {
       path = [path[0], get(stableToken).address, path[1]];
-      target = await get(dexContract).getSwapTargetAmount(path, totalSupply);
+      target = await get(dexContract)!.getSwapTargetAmount(path, totalSupply);
     }
 
     const minTarget = new FixedPointNumber(
@@ -71,16 +71,14 @@
   };
 
   export const makeSwap = async (): Promise<providers.TransactionResponse> => {
-    if (get(signer)) {
-      let [path, totalSupply, minTarget] = await getParams();
+    let [path, totalSupply, minTarget] = await getParams();
 
-      const dexWithSigner = get(dexContract).connect(get(signer));
+    const dexWithSigner = get(dexContract)!.connect(get(signer)!);
 
-      return await dexWithSigner.swapWithExactSupply(
-        path,
-        totalSupply,
-        minTarget
-      );
-    }
+    return await dexWithSigner.swapWithExactSupply(
+      path,
+      totalSupply,
+      minTarget
+    );
   };
 </script>

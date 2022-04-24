@@ -4,7 +4,9 @@
   import Dex from "./lib/Dex.svelte";
   import Toast from "./lib/Toast.svelte";
   import Account from "./lib/Account.svelte";
+  import ExtensionSelect from "./lib/ExtensionSelect/ExtensionSelect.svelte";
 
+  let showExtensionSelect = false;
   let showToast = false;
   let toastTitle = "TX Success";
   let toastDetails: string | undefined = "";
@@ -29,9 +31,15 @@
 <main
   class="flex flex-col justify-start items-center h-screen w-screen bg-gradient-to-br from-acala-700 to-white dark:from-primary-700 dark:to-base-900 pt-80"
 >
+  {#if showExtensionSelect}
+    <ExtensionSelect close={() => (showExtensionSelect = false)} />
+  {/if}
   <Account />
   {#if showToast}
     <Toast type={toastType} title={toastTitle} details={toastDetails} />
   {/if}
-  <Dex {setShowToast} />
+  <Dex
+    {setShowToast}
+    showExtensionSelect={() => (showExtensionSelect = true)}
+  />
 </main>
