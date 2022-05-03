@@ -1,4 +1,4 @@
-import { writable, derived } from "svelte/store";
+import { writable, derived, readable } from "svelte/store";
 import { Signer as EthSigner, Contract } from "ethers";
 import type MultiProvider from "./MultiProvider";
 import DexABI from "../abis/DEX.json";
@@ -6,8 +6,10 @@ import ERC20Abi from "../abis/ERC20.json";
 import { tokens, Chain } from "./tokens";
 import type { Signer as BodhiSigner } from "@acala-network/bodhi";
 
-const CHAIN: any = Chain.MANDALA;
 const DEX_ADDRESS_MANDALA = "0x0000000000000000000000000000000000000804";
+const CHAIN: any = Chain.MANDALA;
+
+export const chain = readable(Chain.MANDALA);
 
 export const provider = writable<MultiProvider | null>(null);
 
