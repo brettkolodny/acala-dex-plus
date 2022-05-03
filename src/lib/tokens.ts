@@ -92,7 +92,7 @@ export const tokens: Token[] = [
     symbol: "BNC",
     address: "0x00000000000000000001000000000000000000a8",
     img: BNCIcon,
-    chains: [Chain.KARURA],
+    chains: [],
   },
   {
     symbol: "vsKSM",
@@ -103,13 +103,13 @@ export const tokens: Token[] = [
     symbol: "PHA",
     address: "0x00000000000000000001000000000000000000Aa",
     img: PHAIcon,
-    chains: [Chain.KARURA],
+    chains: [],
   },
   {
     symbol: "KINT",
     address: "0x00000000000000000001000000000000000000AB",
     img: KINTIcon,
-    chains: [Chain.KARURA],
+    chains: [],
   },
   {
     symbol: "kBTC",
