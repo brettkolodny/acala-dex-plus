@@ -6,10 +6,13 @@ import ERC20Abi from "../abis/ERC20.json";
 import { tokens, Chain } from "./tokens";
 import type { Signer as BodhiSigner } from "@acala-network/bodhi";
 
-const DEX_ADDRESS_MANDALA = "0x0000000000000000000000000000000000000804";
-const CHAIN: any = Chain.MANDALA;
+const CHAIN: any = Chain.KARURA;
+const DEX_ADDRESS =
+  CHAIN === Chain.MANDALA
+    ? "0x0000000000000000000000000000000000000804"
+    : "0x0000000000000000000000000000000000000803";
 
-export const chain = readable(Chain.MANDALA);
+export const chain = readable(CHAIN);
 
 export const provider = writable<MultiProvider | null>(null);
 
@@ -29,7 +32,8 @@ const _toToken =
   CHAIN === Chain.ACALA || CHAIN === Chain.MANDALA
     ? tokens.find((token) => token.symbol === "aUSD")
     : tokens.find(
-        (token) => token.symbol === "KAR" && token.chains.includes(Chain.KARURA)
+        (token) =>
+          token.symbol === "aUSD" && token.chains.includes(Chain.KARURA)
       );
 
 export const toToken = writable(_toToken);
@@ -63,9 +67,9 @@ export const dexContract = derived(
   [signer, provider],
   ([$signer, $provider]) => {
     if ($signer) {
-      return new Contract(DEX_ADDRESS_MANDALA, DexABI, $signer);
+      return new Contract(DEX_ADDRESS, DexABI, $signer);
     } else if ($provider) {
-      return new Contract(DEX_ADDRESS_MANDALA, DexABI, $provider.provider);
+      return new Contract(DEX_ADDRESS, DexABI, $provider.provider);
     } else {
       return null;
     }

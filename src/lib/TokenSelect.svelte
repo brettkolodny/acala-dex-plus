@@ -1,6 +1,6 @@
 <script lang="ts">
   import { chain } from "./stores";
-  import { tokens, Chain, Token } from "./tokens";
+  import { tokens, Token } from "./tokens";
   import TokenDropdown from "./TokenDropdown.svelte";
 
   export let allowMax: boolean = false;
