@@ -6,7 +6,7 @@ import ERC20Abi from "../abis/ERC20.json";
 import { tokens, Chain } from "./tokens";
 import type { Signer as BodhiSigner } from "@acala-network/bodhi";
 
-const CHAIN: any = Chain.MANDALA;
+const CHAIN: any = Chain.KARURA;
 const DEX_ADDRESS =
   CHAIN === Chain.MANDALA
     ? "0x0000000000000000000000000000000000000804"
