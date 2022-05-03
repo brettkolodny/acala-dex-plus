@@ -1,15 +1,11 @@
 <script lang="ts">
-  import { provider, signer } from "../stores";
+  import { chain, provider, signer } from "../stores";
   import type { providers } from "ethers";
   import {
     Provider as BodhiProvider,
     Signer as BodhiSigner,
   } from "@acala-network/bodhi";
-  import {
-    web3Enable,
-    web3FromSource,
-    web3FromAddress,
-  } from "@polkadot/extension-dapp";
+  import { web3Enable, web3FromSource } from "@polkadot/extension-dapp";
   import { cryptoWaitReady } from "@polkadot/util-crypto";
   import type { InjectedExtension } from "@polkadot/extension-inject/types";
   import AccountList from "./AccountList.svelte";
@@ -47,7 +43,7 @@
     await web3Enable("DEX+");
     const talisman = await web3FromSource(extensionName);
     bodhiExtension = talisman;
-    const bodhiProvider = MultiProvider.createBodhiProvider();
+    const bodhiProvider = MultiProvider.createBodhiProvider($chain);
     $provider = bodhiProvider;
 
     const injectedAccounts = await talisman.accounts.get();

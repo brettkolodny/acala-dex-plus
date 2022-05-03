@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { getContext } from "svelte";
   import { Chain } from "./tokens";
-  import { provider, signer, transactionCount } from "./stores";
+  import { chain, provider, signer, transactionCount } from "./stores";
   import { FixedPointNumber } from "@acala-network/sdk-core";
 
-  const chain = getContext("chain");
   const nativeSymbol =
-    chain === Chain.ACALA || chain === Chain.MANDALA ? "ACA" : "KAR";
+    $chain === Chain.ACALA || $chain === Chain.MANDALA ? "ACA" : "KAR";
 
   let address: string | null = null;
   let balance: string | null = null;

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { chain } from "./stores";
   import { tokens, Chain, Token } from "./tokens";
   import TokenDropdown from "./TokenDropdown.svelte";
 
@@ -11,9 +11,8 @@
   let showMax = false;
   let showDropdown = false;
 
-  const chain: Chain = getContext("chain");
   const activeTokens = tokens.filter((token) => {
-    if (token.chains && token.chains.includes(chain)) {
+    if (token.chains && token.chains.includes($chain)) {
       return true;
     }
   });

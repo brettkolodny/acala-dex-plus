@@ -24,8 +24,6 @@
 
     setTimeout(() => (showToast = false), 5000);
   };
-
-  setContext("chain", Chain.MANDALA);
 </script>
 
 <main
